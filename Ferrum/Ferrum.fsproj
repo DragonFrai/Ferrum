@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <PackageId>Ferrum</PackageId>
+        <Version>0.1.0</Version>
+        <Description>F# dynamic error type library</Description>
+        <PackageTags>F# fsharp result error</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/DragonFrai/Ferrum</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/DragonFrai/Ferrum</PackageProjectUrl>
+        <Authors>DragonFrai</Authors>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <TargetFramework>net8.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../README.md" Pack="true" PackagePath="/"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="Types.fs" />
+        <Compile Include="Error.fs" />
+        <Compile Include="BaseErrors.fs" />
+        <Compile Include="Formatting.fs" />
+        <Compile Include="Throwing.fs" />
+    </ItemGroup>
+
+</Project>
