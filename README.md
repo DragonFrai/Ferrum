@@ -1,5 +1,7 @@
 # Ferrum
 
+[![Nuget](https://img.shields.io/nuget/vpre/Ferrum)](https://www.nuget.org/packages/Ferrum/)
+
 The F# library for working with dynamic Error types.
 
 The first library goal is providing lightweight general dynamic 
