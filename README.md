@@ -70,14 +70,14 @@ type IOError =
 let readFile (_fileName: string) : Result<string, IOError> =
     Error IOError.FileNotFound
 
-let makeGreeting (readFile: string -> Result<string, IOError>) : Result<string, IError> =
+let makeGreeting () : Result<string, IError> =
     let readNameResult = readFile "name.txt" |> Result.wrap |> Result.context "Name is unknown"
     match readNameResult with
     | Error err -> Error err
     | Ok name -> Ok $"Hello, {name}"
 
 let greet () : Result<unit, IError> =
-    let makeGreetingResult = makeGreeting readFile |> Result.context "Greeting is not build"
+    let makeGreetingResult = makeGreeting () |> Result.context "Greeting is not build"
     match makeGreetingResult with
     | Error err -> Error err
     | Ok greeting ->
@@ -103,8 +103,6 @@ type SimpleError =
                 | SimpleCase -> "Some simple error case"
             member this.Source =
                 ValueNone
-            member this.StackTrace =
-                ValueNone
 
 type ComplexError =
     | Source of SimpleError
@@ -119,8 +117,6 @@ type ComplexError =
                 match this with
                 | Source simpleError -> ValueSome simpleError
                 | SomeError -> ValueNone
-            member this.StackTrace =
-                ValueNone
 
 let simpleError = SimpleError.SimpleCase
 printfn $" > {simpleError.Format(ErrorFormatters.ChainErrorFormatter.Instance)}"
@@ -135,6 +131,13 @@ printfn $" > {complexErrorWithSource.Format(ErrorFormatters.ChainErrorFormatter.
 // > Error caused by simple error source: Some simple error case
 ```
 
+## Why not Exceptions?
+Exceptions have all the properties that IErrors have.
+Literally Reason <=> Message, Source <=> InnerException, StackTrace <=> StackTrace. 
+The only difference is that IError is a bit more focused on using in Result 
+and is possibly more lightweight.
+It is easy to implement a similar utilities for exn. 
+It all comes down to stylistic preferences.
 
 ## Additional Result and Error functions
 

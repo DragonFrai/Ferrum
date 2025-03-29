@@ -2,11 +2,13 @@ namespace Ferrum.Formatting
 
 open System.Text
 open Ferrum
+open Ferrum.Tracing
 
 
 type IErrorFormatter =
     abstract Format: error: IError -> string
 
+[<RequireQualifiedAccess>]
 module ErrorFormatters =
 
     type TopErrorFormatter private () =
@@ -14,7 +16,6 @@ module ErrorFormatters =
         interface IErrorFormatter with
             member this.Format(error) =
                 error.Reason
-
 
     type ChainErrorFormatter private () =
         static member Instance: ChainErrorFormatter = ChainErrorFormatter()
@@ -31,7 +32,6 @@ module ErrorFormatters =
                     |> Seq.sum
                     |> fun x -> (max (x - 2) 0)
                 loop error (StringBuilder(expectedLength))
-
 
     type MultilineErrorFormatter private () =
         static member Instance: MultilineErrorFormatter = MultilineErrorFormatter()
@@ -52,13 +52,36 @@ module ErrorFormatters =
                     |> fun x -> x + 16
                 loop error 0 (StringBuilder(expectedLength))
 
-
     type MultilineTraceErrorFormatter private () =
         static member Instance: MultilineTraceErrorFormatter = MultilineTraceErrorFormatter()
         interface IErrorFormatter with
             member this.Format(error) =
+                let rec loop (topError: IError) (error: IError) (depth: int) (sb: StringBuilder) =
+                    let sb =
+                        match depth with
+                        | 0 -> sb.Append("Error: ").Append(error.Reason).AppendLine()
+                        | _ -> sb.AppendLine().Append("Caused by: ").Append(error.Reason).AppendLine()
+                    match error.Source with
+                    | ValueNone ->
+                        let sb =
+                            match error.TryGetStackTrace() with
+                            | ValueNone -> sb
+                            | ValueSome stackTrace -> sb.AppendLine().Append("Trace: ").AppendLine().Append(stackTrace)
+                        sb.ToString()
+                    | ValueSome source -> loop topError source (depth + 1) sb
+                let minimalLength =
+                    error.Chain()
+                    |> Seq.map (fun err -> err.Reason.Length + 13)
+                    |> Seq.sum
+                    |> fun x -> x + 16
+                loop error error 0 (StringBuilder(minimalLength))
+
+    type MultilineTraceAllErrorFormatter private () =
+        static member Instance: MultilineTraceAllErrorFormatter = MultilineTraceAllErrorFormatter()
+        interface IErrorFormatter with
+            member this.Format(error) =
                 let appendTraceOrLine (error: IError) (sb: StringBuilder) : StringBuilder =
-                    match error.StackTrace with
+                    match error.TryGetStackTrace() with
                     | ValueNone -> sb.AppendLine()
                     | ValueSome stackTrace -> sb.AppendLine().Append("Trace: ").AppendLine().Append(stackTrace)
                 let rec loop (error: IError) (depth: int) (sb: StringBuilder) =
@@ -97,6 +120,8 @@ module FormattingExtensions =
         member inline this.FormatMultilineTrace() : string =
             (ErrorFormatters.MultilineTraceErrorFormatter.Instance :> IErrorFormatter).Format(this)
 
+        member inline this.FormatMultilineTraceAll() : string =
+            (ErrorFormatters.MultilineTraceAllErrorFormatter.Instance :> IErrorFormatter).Format(this)
 
     [<RequireQualifiedAccess>]
     module Error =
@@ -113,5 +138,10 @@ module FormattingExtensions =
         let inline formatMultiline (err: IError) : string =
             (ErrorFormatters.MultilineErrorFormatter.Instance :> IErrorFormatter).Format(err)
 
+        // TODO?: Move to Ferrum.Tracing
         let inline formatMultilineTrace (err: IError) : string =
             (ErrorFormatters.MultilineTraceErrorFormatter.Instance :> IErrorFormatter).Format(err)
+
+        // TODO?: Move to Ferrum.Tracing
+        let inline formatMultilineTraceAll (err: IError) : string =
+            (ErrorFormatters.MultilineTraceAllErrorFormatter.Instance :> IErrorFormatter).Format(err)
