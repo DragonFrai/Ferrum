@@ -6,13 +6,15 @@ module FundamentalExtensions =
 
     type IError with
         member this.Chain() : IError seq =
-            let mutable current = ValueSome this
             seq {
-                match current with
-                | ValueNone -> ()
-                | ValueSome err ->
-                    current <- err.Source
-                    yield err
+                let rec loop (current: IError voption) = seq {
+                    match current with
+                    | ValueNone -> ()
+                    | ValueSome err ->
+                        yield err
+                        yield! loop err.Source
+                }
+                yield! loop (ValueSome this)
             }
 
         member this.GetRoot() : IError =
