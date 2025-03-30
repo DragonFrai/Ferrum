@@ -15,13 +15,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="../README.md" Pack="true" PackagePath="/"/>
-    </ItemGroup>
-
-    <ItemGroup>
+        <None Include="..\README.md">
+          <Pack>true</Pack>
+          <PackagePath>/</PackagePath>
+          <Link>README.md</Link>
+        </None>
         <Compile Include="Types.fs" />
         <Compile Include="Error.fs" />
-        <Compile Include="BaseErrors.fs" />
+        <Compile Include="Errors.fs" />
+        <Compile Include="Tracing.fs" />
         <Compile Include="Formatting.fs" />
         <Compile Include="Throwing.fs" />
     </ItemGroup>

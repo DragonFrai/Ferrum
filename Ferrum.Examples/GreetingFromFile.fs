@@ -11,14 +11,14 @@ type IOError =
 let readFile (_fileName: string) : Result<string, IOError> =
     Error IOError.FileNotFound
 
-let makeGreeting (readFile: string -> Result<string, IOError>) : Result<string, IError> =
+let makeGreeting () : Result<string, IError> =
     let readNameResult = readFile "name.txt" |> Result.wrap |> Result.context "Name is unknown"
     match readNameResult with
     | Error err -> Error err
     | Ok name -> Ok $"Hello, {name}"
 
 let greet () : Result<unit, IError> =
-    let makeGreetingResult = makeGreeting readFile |> Result.context "Greeting is not build"
+    let makeGreetingResult = makeGreeting () |> Result.context "Greeting is not build"
     match makeGreetingResult with
     | Error err -> Error err
     | Ok greeting ->

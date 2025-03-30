@@ -3,11 +3,12 @@ namespace Ferrum.Throwing
 open System
 open Ferrum
 open Ferrum.Formatting
+open Ferrum.Tracing
 
 
 [<Sealed>]
 type ErrorException(error: IError, formatter: IErrorFormatter) =
-    inherit Exception(formatter.Format(error)) // TODO?: Wrap source error to inner exception 
+    inherit Exception(formatter.Format(error)) // TODO?: Wrap source error to inner exception
     new(error: IError) = ErrorException(error, ErrorFormatters.TopErrorFormatter.Instance)
     member this.Error: IError = error
 
@@ -18,16 +19,14 @@ module Errors =
     type WrapException(ex: exn) =
         member this.Exception: exn = ex
         override this.ToString() = ex.Message
-        interface IError with
+        interface ITraceError with
             member this.Reason = ex.Message
             member this.Source =
                 match ex.InnerException with
                 | null -> ValueNone
                 | inner -> ValueSome(WrapException(inner)) // TODO?: Cache it
-            member this.StackTrace =
-                match ex.StackTrace with
-                | null -> ValueNone
-                | stackTrace -> ValueSome stackTrace
+            member this.StackTrace = ex.StackTrace
+            member this.LocalStackTrace = null
 
 [<AutoOpen>]
 module ThrowingErrorExtension =

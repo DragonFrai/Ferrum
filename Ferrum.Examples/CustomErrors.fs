@@ -14,8 +14,6 @@ type SimpleError =
                 | SimpleCase -> "Some simple error case"
             member this.Source =
                 ValueNone
-            member this.StackTrace =
-                ValueNone
 
 type ComplexError =
     | Source of SimpleError
@@ -30,8 +28,6 @@ type ComplexError =
                 match this with
                 | Source simpleError -> ValueSome simpleError
                 | SomeError -> ValueNone
-            member this.StackTrace =
-                ValueNone
 
 let run () =
 
