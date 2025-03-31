@@ -21,7 +21,7 @@ module Errors =
             member this.Source = ValueSome source
 
     [<Sealed>]
-    type Wrap<'e>(error: 'e) =
+    type Wrapped<'e>(error: 'e) =
         override this.ToString() = $"{error}"
         interface IError with
             member this.Reason = $"{error}"
@@ -46,7 +46,7 @@ module ErrorsExtensions =
             Errors.Context(context, source)
 
         let inline wrap (error: 'e) : IError =
-            Errors.Wrap(error)
+            Errors.Wrapped(error)
 
 
     [<RequireQualifiedAccess>]

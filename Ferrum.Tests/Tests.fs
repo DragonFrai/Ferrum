@@ -17,13 +17,13 @@ let ``MessageError works`` () =
 type ErrorToWrap = ErrorToWrap
 
 [<Fact>]
-let ``WrapError works`` () =
+let ``WrappedError works`` () =
     let test (f: ErrorToWrap -> IError) : unit =
         let errorToWrap = ErrorToWrap
         let err = f errorToWrap
         Assert.Equal(errorToWrap.ToString(), err.Reason)
         Assert.Equal(ValueNone, err.Source)
-    do test (fun err -> Errors.Wrap(err))
+    do test (fun err -> Errors.Wrapped(err))
     do test Error.wrap
     do test (fun err -> Result.wrap (Error err) |> Result.getError)
 

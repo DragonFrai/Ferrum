@@ -82,9 +82,9 @@ module TraceErrorsExtensions =
                 member this.LocalStackTrace = stackTrace
 
         [<Sealed>]
-        type WrapTrace<'e>(error: 'e, stackTrace: StackTrace) =
+        type WrappedTrace<'e>(error: 'e, stackTrace: StackTrace) =
             [<StackTraceHidden>]
-            new(error: 'e) = WrapTrace(error, StackTrace(0, true))
+            new(error: 'e) = WrappedTrace(error, StackTrace(0, true))
             override this.ToString() = error.ToString()
             interface ITraceError with
                 member this.Reason = error.ToString()
@@ -112,7 +112,7 @@ module TraceErrorsExtensions =
 
         [<StackTraceHidden>]
         let inline wrapT (error: 'e) : IError =
-            Errors.WrapTrace(error)
+            Errors.WrappedTrace(error)
 
     [<RequireQualifiedAccess>]
     module Result =

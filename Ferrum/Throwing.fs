@@ -16,7 +16,7 @@ type ErrorException(error: IError, formatter: IErrorFormatter) =
 module Errors =
 
     [<Sealed>]
-    type WrapException(ex: exn) =
+    type WrappedException(ex: exn) =
         member this.Exception: exn = ex
         override this.ToString() = ex.Message
         interface ITraceError with
@@ -24,7 +24,7 @@ module Errors =
             member this.Source =
                 match ex.InnerException with
                 | null -> ValueNone
-                | inner -> ValueSome(WrapException(inner)) // TODO?: Cache it
+                | inner -> ValueSome(WrappedException(inner)) // TODO?: Cache it
             member this.StackTrace = ex.StackTrace
             member this.LocalStackTrace = null
 
@@ -34,7 +34,7 @@ module ThrowingErrorExtension =
     type IError with
 
         static member OfException(ex: exn) : IError =
-            Errors.WrapException(ex)
+            Errors.WrappedException(ex)
 
         member this.ToException() : ErrorException =
             ErrorException(this)
@@ -52,7 +52,7 @@ module ThrowingErrorExtension =
     module Error =
 
         let ofException (ex: exn) : IError =
-            Errors.WrapException(ex)
+            Errors.WrappedException(ex)
 
         let toException (err: IError) : ErrorException =
             ErrorException(err)
