@@ -9,7 +9,7 @@ open Ferrum.Tracing
 [<Sealed>]
 type ErrorException(error: IError, formatter: IErrorFormatter) =
     inherit Exception(formatter.Format(error)) // TODO?: Wrap source error to inner exception
-    new(error: IError) = ErrorException(error, ErrorFormatters.TopErrorFormatter.Instance)
+    new(error: IError) = ErrorException(error, ErrorFormatters.FinalErrorFormatter.Instance)
     member this.Error: IError = error
 
 [<RequireQualifiedAccess>]

@@ -11,46 +11,111 @@ type IErrorFormatter =
 [<RequireQualifiedAccess>]
 module ErrorFormatters =
 
-    type TopErrorFormatter private () =
-        static member Instance: TopErrorFormatter = TopErrorFormatter()
+    [<RequireQualifiedAccess>]
+    module private SB =
+
+        let inline append (str: string) (sb: StringBuilder) : StringBuilder =
+            sb.Append(str)
+
+        let inline appendInt (num: int) (sb: StringBuilder) : StringBuilder =
+            sb.Append(num)
+
+        let inline appendLine (sb: StringBuilder) : StringBuilder =
+            sb.AppendLine()
+
+
+    [<RequireQualifiedAccess>]
+    module private Utils =
+
+        let [<Literal>] NoReason = "<noreason>"
+
+        let inline notEmptyOrNoReason (reason: string) : string =
+            match reason with
+            | null | "" -> NoReason
+            | reason -> reason
+
+        let reasonLength (error: IError) : int =
+            (notEmptyOrNoReason (Error.reason error)).Length
+
+        let appendReason (error: IError) (sb: StringBuilder) : StringBuilder =
+            sb.Append(notEmptyOrNoReason (Error.reason error))
+
+        let inline foldErrorChain<'s>
+                ([<InlineIfLambda>] finalErrorHook: 's -> IError -> 's)
+                ([<InlineIfLambda>] chainErrorHook: 's -> IError -> 's)
+                (state: 's)
+                (error: IError)
+                : 's =
+            let mutable state = state
+            do state <- finalErrorHook state error
+            do
+                let mutable source = error.Source
+                while source.IsSome do
+                    let sourceError = source.Value
+                    state <- chainErrorHook state sourceError
+                    source <- sourceError.Source
+            state
+
+
+    type FinalErrorFormatter private () =
+        static member Instance: FinalErrorFormatter = FinalErrorFormatter()
         interface IErrorFormatter with
             member this.Format(error) =
-                error.Reason
+                Utils.notEmptyOrNoReason (Error.reason error)
 
     type ChainErrorFormatter private () =
         static member Instance: ChainErrorFormatter = ChainErrorFormatter()
         static member private Delimiter = ": "
         interface IErrorFormatter with
             member this.Format(error) =
-                let rec loop (error: IError) (sb: StringBuilder) =
-                    match error.Source with
-                    | ValueNone -> sb.Append(error.Reason).ToString()
-                    | ValueSome source -> loop source (sb.Append(error.Reason).Append(ChainErrorFormatter.Delimiter))
                 let expectedLength =
-                    error.Chain()
-                    |> Seq.map (fun err -> err.Reason.Length + ChainErrorFormatter.Delimiter.Length)
-                    |> Seq.sum
-                    |> fun x -> (max (x - 2) 0)
-                loop error (StringBuilder(expectedLength))
+                    Utils.foldErrorChain<int>
+                        (fun c error -> c + Utils.reasonLength error)
+                        (fun c error -> c + Utils.reasonLength error + ChainErrorFormatter.Delimiter.Length)
+                        0
+                        error
+                let sb =
+                    Utils.foldErrorChain<StringBuilder>
+                        (fun sb error ->
+                            sb
+                            |> Utils.appendReason error)
+                        (fun sb error ->
+                            sb
+                            |> SB.append ChainErrorFormatter.Delimiter
+                            |> Utils.appendReason error)
+                        (StringBuilder(expectedLength))
+                        error
+                sb.ToString()
+
 
     type MultilineErrorFormatter private () =
         static member Instance: MultilineErrorFormatter = MultilineErrorFormatter()
+        static member private FinalPrefix: string = "Error: "
+        static member private ChainPrefix: string = "Caused by: "
         interface IErrorFormatter with
             member this.Format(error) =
-                let rec loop (error: IError) (depth: int) (sb: StringBuilder) =
-                    let sb =
-                        match depth with
-                        | 0 -> sb.Append("Error: ").Append(error.Reason).AppendLine()
-                        | _ -> sb.AppendLine().Append("Caused by: ").Append(error.Reason).AppendLine()
-                    match error.Source with
-                    | ValueNone -> sb.ToString()
-                    | ValueSome source -> loop source (depth + 1) sb
                 let expectedLength =
-                    error.Chain()
-                    |> Seq.map (fun err -> err.Reason.Length + 13)
-                    |> Seq.sum
-                    |> fun x -> x + 16
-                loop error 0 (StringBuilder(expectedLength))
+                    Utils.foldErrorChain<int>
+                        (fun c error -> c + MultilineErrorFormatter.FinalPrefix.Length + Utils.reasonLength error + 1)
+                        (fun c error -> c + MultilineErrorFormatter.ChainPrefix.Length + Utils.reasonLength error + 2)
+                        0
+                        error
+                let sb =
+                    Utils.foldErrorChain<StringBuilder>
+                        (fun sb error ->
+                            sb
+                            |> SB.append MultilineErrorFormatter.FinalPrefix
+                            |> Utils.appendReason error
+                            |> SB.appendLine)
+                        (fun sb error ->
+                            sb
+                            |> SB.appendLine
+                            |> SB.append MultilineErrorFormatter.ChainPrefix
+                            |> Utils.appendReason error
+                            |> SB.appendLine)
+                        (StringBuilder(expectedLength))
+                        error
+                sb.ToString()
 
     type MultilineTraceErrorFormatter private () =
         static member Instance: MultilineTraceErrorFormatter = MultilineTraceErrorFormatter()
@@ -59,8 +124,17 @@ module ErrorFormatters =
                 let rec loop (topError: IError) (error: IError) (depth: int) (sb: StringBuilder) =
                     let sb =
                         match depth with
-                        | 0 -> sb.Append("Error: ").Append(error.Reason).AppendLine()
-                        | _ -> sb.AppendLine().Append("Caused by: ").Append(error.Reason).AppendLine()
+                        | 0 ->
+                            sb
+                            |> SB.append "Error: "
+                            |> Utils.appendReason error
+                            |> SB.appendLine
+                        | _ ->
+                            sb
+                            |> SB.appendLine
+                            |> SB.append "Caused by: "
+                            |> Utils.appendReason error
+                            |> SB.appendLine
                     match error.Source with
                     | ValueNone ->
                         let sb =
@@ -73,7 +147,7 @@ module ErrorFormatters =
                     error.Chain()
                     |> Seq.map (fun err -> err.Reason.Length + 13)
                     |> Seq.sum
-                    |> fun x -> x + 16
+                    |> fun x -> x + 16 + 1024
                 loop error error 0 (StringBuilder(minimalLength))
 
     type MultilineTraceAllErrorFormatter private () =
@@ -87,8 +161,17 @@ module ErrorFormatters =
                 let rec loop (error: IError) (depth: int) (sb: StringBuilder) =
                     let sb =
                         match depth with
-                        | 0 -> sb.Append("Error: ").Append(error.Reason) |> appendTraceOrLine error
-                        | _ -> sb.AppendLine().Append("Caused by: ").Append(error.Reason) |> appendTraceOrLine error
+                        | 0 ->
+                            sb
+                            |> SB.append "Error: "
+                            |> Utils.appendReason error
+                            |> appendTraceOrLine error
+                        | _ ->
+                            sb
+                            |> SB.appendLine
+                            |> SB.append "Caused by: "
+                            |> Utils.appendReason error
+                            |> appendTraceOrLine error
                     match error.Source with
                     | ValueNone -> sb.ToString()
                     | ValueSome source -> loop source (depth + 1) sb
@@ -109,7 +192,7 @@ module FormattingExtensions =
             formatter.Format(this)
 
         member inline this.FormatTop() : string =
-            (ErrorFormatters.TopErrorFormatter.Instance :> IErrorFormatter).Format(this)
+            (ErrorFormatters.FinalErrorFormatter.Instance :> IErrorFormatter).Format(this)
 
         member inline this.FormatChain() : string =
             (ErrorFormatters.ChainErrorFormatter.Instance :> IErrorFormatter).Format(this)
@@ -129,8 +212,8 @@ module FormattingExtensions =
         let inline format (formatter: IErrorFormatter) (err: IError) : string =
             formatter.Format(err)
 
-        let inline formatTop (err: IError) : string =
-            (ErrorFormatters.TopErrorFormatter.Instance :> IErrorFormatter).Format(err)
+        let inline formatFinal (err: IError) : string =
+            (ErrorFormatters.FinalErrorFormatter.Instance :> IErrorFormatter).Format(err)
 
         let inline formatChain (err: IError) : string =
             (ErrorFormatters.ChainErrorFormatter.Instance :> IErrorFormatter).Format(err)

@@ -8,7 +8,7 @@ open System.Collections
 module AggregateExtensions =
 
     [<RequireQualifiedAccess>]
-    module rec Errors =
+    module Errors =
 
         type Aggregate(reason: string, errors: IError seq) =
 
