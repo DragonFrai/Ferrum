@@ -26,6 +26,7 @@
         <Compile Include="Types.fs" />
         <Compile Include="Error.fs" />
         <Compile Include="Errors.fs" />
+        <Compile Include="AggregateError.fs" />
         <Compile Include="Tracing.fs" />
         <Compile Include="Formatting.fs" />
         <Compile Include="Throwing.fs" />

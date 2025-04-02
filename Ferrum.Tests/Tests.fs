@@ -58,3 +58,33 @@ let ``Error get root works`` () =
     do test (fun err -> err.GetRoot())
     do test Error.getRoot
 
+[<Fact>]
+let rec ``AggregateError with single aggregated error works`` () =
+    let errors = [| Error.message "err1" |]
+    let agg = Error.aggregate "agg" errors
+    let errors' = AggregateError.errors agg |> Seq.toArray
+    Assert.Equal("agg", Error.reason agg)
+    Assert.Equal(ValueSome (errors[0]), Error.source agg)
+    Assert.Equal<IError>(errors, errors')
+
+[<Fact>]
+let rec ``AggregateError contains original error sequence in original order`` () =
+    let errors = [| "err1"; "err2"; |] |> Array.map Error.message
+    let agg = Error.aggregate "agg" errors
+    let errors' = AggregateError.errors agg |> Seq.toArray
+    Assert.Equal<IError>(errors, errors')
+
+[<Fact>]
+let rec ``AggregateError with empty errors suitable`` () =
+    let errors = [| |]
+    let agg = Error.aggregate "agg" errors
+    Assert.True(AggregateError.errors agg |> Seq.isEmpty)
+    Assert.Equal(ValueNone, Error.source agg)
+
+[<Fact>]
+let rec ``AggregateError Source member returns first error in aggregated sequence`` () =
+    let err1 = Error.message "err1"
+    let err2 = Error.message "err2"
+    let agg = Error.aggregate "agg" [| err1; err2 |]
+    Assert.Equal(ValueSome err1, Error.source agg)
+
