@@ -18,7 +18,11 @@ module FundamentalExtensions =
             }
 
         member this.GetRoot() : IError =
-            this.Chain() |> Seq.last
+            let rec loop (current: IError) =
+                match current.Source with
+                | ValueNone -> current
+                | ValueSome err -> loop err
+            loop this
 
     [<RequireQualifiedAccess>]
     module Error =
