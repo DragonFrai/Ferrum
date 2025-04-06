@@ -1,7 +1,6 @@
 module [<AutoOpen>] Ferrum.ErrorModuleExtensions
 
 open System.Diagnostics
-open Ferrum.Formatting
 open Ferrum.Internal
 
 

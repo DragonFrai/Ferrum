@@ -1,7 +1,6 @@
 module [<AutoOpen>] Ferrum.ErrorExtensions
 
 open System.Diagnostics
-open Ferrum.Formatting
 
 
 type IError with

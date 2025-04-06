@@ -1,7 +1,6 @@
 namespace Ferrum.Examples
 
 open Ferrum
-open Ferrum.Formatting
 
 
 [<RequireQualifiedAccess>]

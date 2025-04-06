@@ -2,7 +2,6 @@
 module Ferrum.Examples.DynamicErrors
 
 open Ferrum
-open Ferrum.Formatting
 
 
 type SomeError = SomeError

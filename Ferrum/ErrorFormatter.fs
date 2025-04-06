@@ -1,4 +1,4 @@
-namespace Ferrum.Formatting
+namespace Ferrum
 
 open Ferrum
 

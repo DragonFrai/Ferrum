@@ -2,7 +2,6 @@
 module Ferrum.Examples.CustomErrors
 
 open Ferrum
-open Ferrum.Formatting
 
 
 type SimpleError =

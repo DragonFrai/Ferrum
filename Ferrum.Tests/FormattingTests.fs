@@ -1,7 +1,6 @@
 module Ferrum.Tests.FormattingTests
 
 open System
-open Ferrum.Formatting
 open Xunit
 open Ferrum
 
