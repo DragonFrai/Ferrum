@@ -35,11 +35,11 @@ module Error =
     let inline aggregateT (reason: string) (errors: IError seq) : AggregateError =
         AggregateTracedError(reason, errors)
 
-    let segregate (error: IError) : IError seq =
-        match error with
-        | :? AggregateError as error -> error.Errors
-        | error -> Seq.singleton error
-
+    // TODO?: Return Source instead this ???
+    // let segregate (error: IError) : IError seq =
+    //     match error with
+    //     | :? AggregateError as error -> error.Errors
+    //     | error -> Seq.singleton error
 
     let chain (err: IError) : IError seq =
         seq {
