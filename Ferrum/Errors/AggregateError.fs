@@ -7,7 +7,7 @@ open System.Diagnostics
 
 type AggregateError(reason: string, errors: IError seq) =
 
-    member this.Errors: IError seq = errors
+    member this.Sources: IError seq = errors
 
     interface IError with
         member this.Reason = reason
@@ -38,4 +38,4 @@ type AggregateTracedError(reason: string, errors: IError seq, stackTrace: StackT
 module AggregateError =
 
     let errors (error: AggregateError) : IError seq =
-        error.Errors
+        error.Sources
