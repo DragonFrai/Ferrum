@@ -32,7 +32,7 @@
         <Compile Include="Errors\ContextError.fs" />
         <Compile Include="Errors\WrappedError.fs" />
         <Compile Include="Errors\AggregateError.fs" />
-        <Compile Include="Throwing.fs" />
+        <Compile Include="ExceptionInterop.fs" />
         <Compile Include="ErrorModuleExtensions.fs" />
         <Compile Include="ErrorExtensions.fs" />
         <Compile Include="Result.fs" />

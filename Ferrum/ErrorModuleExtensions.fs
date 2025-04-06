@@ -67,6 +67,14 @@ module Error =
     let localStackTrace (error: IError) : StackTrace voption =
         Utils.localStackTraceChecked error |> ValueOption.ofObj
 
+    let inline ofException (ex: exn) : IError =
+        ExceptionError(ex)
+
+    let inline toException (err: IError) : ErrorException =
+        ErrorException(err)
+
+    let throw<'a> (err: IError) : 'a =
+        raise (ErrorException(err))
 
     let inline format (formatter: IErrorFormatter) (err: IError) : string =
         formatter.Format(err)

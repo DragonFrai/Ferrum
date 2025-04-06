@@ -26,6 +26,12 @@ type IError with
         Error.localStackTrace this
 
 
+    member this.ToException() : ErrorException =
+        ErrorException(this)
+
+    member this.Throw<'a>() : 'a =
+        raise (ErrorException(this))
+
 
     member inline this.Format(formatter: IErrorFormatter) : string =
         formatter.Format(this)
