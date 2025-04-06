@@ -3,13 +3,12 @@ namespace Ferrum.Throwing
 open System
 open Ferrum
 open Ferrum.Formatting
-open Ferrum.Tracing
 
 
 [<Sealed>]
 type ErrorException(error: IError, formatter: IErrorFormatter) =
     inherit Exception(formatter.Format(error)) // TODO?: Wrap source error to inner exception
-    new(error: IError) = ErrorException(error, ErrorFormatters.FinalErrorFormatter.Instance)
+    new(error: IError) = ErrorException(error, FinalErrorFormatter.Instance)
     member this.Error: IError = error
 
 [<RequireQualifiedAccess>]
@@ -19,7 +18,7 @@ module Errors =
     type WrappedException(ex: exn) =
         member this.Exception: exn = ex
         override this.ToString() = ex.Message
-        interface ITraceError with
+        interface ITracedError with
             member this.Reason = ex.Message
             member this.Source =
                 match ex.InnerException with

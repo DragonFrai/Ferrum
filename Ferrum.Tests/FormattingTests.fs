@@ -25,25 +25,25 @@ let assertFormatByLines (formatter: IErrorFormatter) (error: IError) (testers: (
 
 [<Fact>]
 let ``FinalErrorFormatter works`` () =
-    let fmt = ErrorFormatters.FinalErrorFormatter.Instance
+    let fmt = FinalErrorFormatter.Instance
     do assertFormat fmt singleError "Final"
     do assertFormat fmt chainError "Final"
 
 [<Fact>]
 let ``ChainErrorFormatter works`` () =
-    let fmt = ErrorFormatters.ChainErrorFormatter.Instance
+    let fmt = ChainErrorFormatter.Instance
     do assertFormat fmt singleError "Final"
     do assertFormat fmt chainError "Final: Middle: Root"
 
 [<Fact>]
 let ``MultilineErrorFormatter works`` () =
-    let fmt = ErrorFormatters.MultilineErrorFormatter.Instance
+    let fmt = MultilineErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
     do assertFormat fmt chainError "Error: Final\n\nCaused by: Middle\n\nCaused by: Root\n"
 
 [<Fact>]
 let ``MultilineTraceErrorFormatter works`` () =
-    let fmt = ErrorFormatters.MultilineErrorFormatter.Instance
+    let fmt = MultilineErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
     do assertFormat fmt chainError "Error: Final\n\nCaused by: Middle\n\nCaused by: Root\n"
 
