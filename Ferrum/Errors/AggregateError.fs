@@ -7,10 +7,10 @@ open System.Diagnostics
 
 type AggregateError(reason: string, errors: IError seq) =
 
-    member this.Sources: IError seq = errors
+    interface IAggregateError with
 
-    interface IError with
         member this.Reason = reason
+
         member this.Source =
             match errors with
             | :? IReadOnlyList<IError> as errors ->
@@ -23,6 +23,8 @@ type AggregateError(reason: string, errors: IError seq) =
                 use e = errors.GetEnumerator()
                 if e.MoveNext() then ValueSome e.Current else ValueNone
 
+        member this.Sources: IError seq = errors
+
 type AggregateTracedError(reason: string, errors: IError seq, stackTrace: StackTrace) =
     inherit AggregateError(reason, errors)
 
@@ -32,10 +34,3 @@ type AggregateTracedError(reason: string, errors: IError seq, stackTrace: StackT
     interface ITracedError with
         member this.StackTrace = stackTrace.ToString()
         member this.LocalStackTrace = stackTrace
-
-
-[<RequireQualifiedAccess>]
-module AggregateError =
-
-    let errors (error: AggregateError) : IError seq =
-        error.Sources

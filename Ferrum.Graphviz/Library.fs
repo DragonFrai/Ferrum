@@ -67,7 +67,7 @@ type GraphvizErrorFormatter private () =
         member this.Format(error) =
             let getErrorSources (err: IError) =
                 match err with
-                | :? AggregateError as err ->
+                | :? IAggregateError as err ->
                     err.Sources
                 | err ->
                     match err.Source with

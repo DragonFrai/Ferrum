@@ -25,6 +25,7 @@
     <ItemGroup>
         <Compile Include="Error.fs" />
         <Compile Include="TracedError.fs" />
+        <Compile Include="AggregateError.fs" />
         <Compile Include="ErrorFormatter.fs" />
         <Compile Include="Internal.fs" />
         <Compile Include="Formatters\Formatters.fs" />
