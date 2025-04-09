@@ -22,8 +22,6 @@ type ErrorException =
 
     override this.StackTrace = Utils.stackTraceChecked this.Error
 
-    override this.ToString(): string = this._error.Reason
-
 
 type ExceptionError =
 
