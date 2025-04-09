@@ -1,4 +1,4 @@
-module [<AutoOpen>] Ferrum.ErrorModuleExtensions
+namespace Ferrum
 
 open System.Diagnostics
 open Ferrum.Internal
@@ -6,6 +6,12 @@ open Ferrum.Internal
 
 [<RequireQualifiedAccess>]
 module Error =
+
+    let inline reason (err: IError) : string =
+        err.Reason
+
+    let inline source (err: IError) : IError voption =
+        err.Source
 
     let inline message (reason: string) : IError =
         MessageError(reason)
@@ -35,11 +41,14 @@ module Error =
     let inline aggregateT (reason: string) (errors: IError seq) : AggregateError =
         AggregateTracedError(reason, errors)
 
-    // TODO?: Return Source instead this ???
-    // let segregate (error: IError) : IError seq =
-    //     match error with
-    //     | :? AggregateError as error -> error.Errors
-    //     | error -> Seq.singleton error
+    let sources (err: IError) : IError seq =
+        match err with
+        | :? IAggregateError as err ->
+            err.Sources
+        | err ->
+            match err.Source with
+            | ValueNone -> Seq.empty
+            | ValueSome source -> Seq.singleton source
 
     let chain (err: IError) : IError seq =
         seq {

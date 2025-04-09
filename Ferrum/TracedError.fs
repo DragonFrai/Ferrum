@@ -23,13 +23,3 @@ type ITracedError =
     /// </summary>
     /// <returns> Stack trace string or null </returns>
     abstract LocalStackTrace: StackTrace
-
-
-[<RequireQualifiedAccess>]
-module TracedError =
-
-    let inline stackTrace (err: ITracedError) : string =
-        err.StackTrace
-
-    let inline localStackTrace (err: ITracedError) : StackTrace =
-        err.LocalStackTrace

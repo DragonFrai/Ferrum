@@ -62,7 +62,7 @@ let ``Error get root works`` () =
 let rec ``AggregateError with single aggregated error works`` () =
     let errors = [| Error.message "err1" |]
     let agg = Error.aggregate "agg" errors
-    let errors' = AggregateError.errors agg |> Seq.toArray
+    let errors' = agg.Sources |> Seq.toArray
     Assert.Equal("agg", Error.reason agg)
     Assert.Equal(ValueSome (errors[0]), Error.source agg)
     Assert.Equal<IError>(errors, errors')
@@ -71,14 +71,14 @@ let rec ``AggregateError with single aggregated error works`` () =
 let rec ``AggregateError contains original error sequence in original order`` () =
     let errors = [| "err1"; "err2"; |] |> Array.map Error.message
     let agg = Error.aggregate "agg" errors
-    let errors' = AggregateError.errors agg |> Seq.toArray
+    let errors' = agg.Sources |> Seq.toArray
     Assert.Equal<IError>(errors, errors')
 
 [<Fact>]
 let rec ``AggregateError with empty errors suitable`` () =
     let errors = [| |]
     let agg = Error.aggregate "agg" errors
-    Assert.True(AggregateError.errors agg |> Seq.isEmpty)
+    Assert.True(agg.Sources |> Seq.isEmpty)
     Assert.Equal(ValueNone, Error.source agg)
 
 [<Fact>]
