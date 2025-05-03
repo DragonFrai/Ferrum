@@ -36,19 +36,19 @@ type IError with
 
 
     member inline this.Format(formatter: IErrorFormatter) : string =
-        formatter.Format(this)
+        Error.format formatter this
 
-    member inline this.FormatTop() : string =
-        (FinalErrorFormatter.Instance :> IErrorFormatter).Format(this)
+    member inline this.FormatFinal() : string =
+        Error.formatFinal this
 
     member inline this.FormatChain() : string =
-        (ChainErrorFormatter.Instance :> IErrorFormatter).Format(this)
+        Error.formatChain this
 
     member inline this.FormatMultiline() : string =
-        (MultilineErrorFormatter.Instance :> IErrorFormatter).Format(this)
+        Error.formatMultiline this
 
     member inline this.FormatMultilineTrace() : string =
-        (MultilineTraceErrorFormatter.Instance :> IErrorFormatter).Format(this)
+        Error.formatMultilineTrace this
 
     member inline this.FormatMultilineTraceAll() : string =
-        (MultilineTraceAllErrorFormatter.Instance :> IErrorFormatter).Format(this)
+        Error.formatMultilineTraceAll this

@@ -42,7 +42,14 @@ let ``MultilineErrorFormatter works`` () =
 
 [<Fact>]
 let ``MultilineTraceErrorFormatter works`` () =
-    let fmt = MultilineErrorFormatter.Instance
+    let fmt = MultilineTraceErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
     do assertFormat fmt chainError "Error: Final\n\nCaused by: Middle\n\nCaused by: Root\n"
 
+[<Fact>]
+let ``foo`` () =
+    let fmt = MultilineTraceErrorFormatter.Instance
+
+
+    do assertFormat fmt singleError "Error: Final\n"
+    do assertFormat fmt chainError "Error: Final\n\nCaused by: Middle\n\nCaused by: Root\n"
