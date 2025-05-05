@@ -50,7 +50,8 @@ module internal GraphvizUtils =
 
 type GraphvizErrorFormatter private () =
 
-    static member Instance: GraphvizErrorFormatter = GraphvizErrorFormatter()
+    static let _instance = GraphvizErrorFormatter()
+    static member Instance: GraphvizErrorFormatter = _instance
 
     member this.Format(ex: exn) : string =
         let getExceptionSources (ex: exn) =
