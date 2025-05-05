@@ -29,27 +29,25 @@ let ``FinalErrorFormatter works`` () =
     do assertFormat fmt chainError "Final"
 
 [<Fact>]
+let ``FinalMultilineErrorFormatter works`` () =
+    let fmt = FinalMultilineErrorFormatter.Instance
+    do assertFormat fmt singleError "Error: Final\n"
+    do assertFormat fmt chainError "Error: Final\n"
+
+[<Fact>]
 let ``ChainErrorFormatter works`` () =
     let fmt = ChainErrorFormatter.Instance
     do assertFormat fmt singleError "Final"
     do assertFormat fmt chainError "Final: Middle: Root"
 
 [<Fact>]
-let ``MultilineErrorFormatter works`` () =
-    let fmt = MultilineErrorFormatter.Instance
+let ``ChainMultilineErrorFormatter works`` () =
+    let fmt = ChainMultilineErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
-    do assertFormat fmt chainError "Error: Final\n\nCaused by: Middle\n\nCaused by: Root\n"
+    do assertFormat fmt chainError "Error: Final\nCaused by: Middle\nCaused by: Root\n"
 
 [<Fact>]
-let ``MultilineTraceErrorFormatter works`` () =
-    let fmt = MultilineTraceErrorFormatter.Instance
+let ``ChainShortErrorFormatter works`` () =
+    let fmt = ChainShortenedErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
-    do assertFormat fmt chainError "Error: Final\n\nCaused by: Middle\n\nCaused by: Root\n"
-
-[<Fact>]
-let ``foo`` () =
-    let fmt = MultilineTraceErrorFormatter.Instance
-
-
-    do assertFormat fmt singleError "Error: Final\n"
-    do assertFormat fmt chainError "Error: Final\n\nCaused by: Middle\n\nCaused by: Root\n"
+    do assertFormat fmt chainError "Error: Final\nCaused by: Middle\nCaused by: Root\n"

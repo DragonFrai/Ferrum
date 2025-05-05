@@ -45,10 +45,10 @@ type IError with
         Error.formatChain this
 
     member inline this.FormatMultiline() : string =
-        Error.formatMultiline this
+        Error.formatChainMultiline this
 
     member inline this.FormatMultilineTrace() : string =
-        Error.formatMultilineTrace this
+        Error.formatFinalMultiline this
 
     member inline this.FormatMultilineTraceAll() : string =
-        Error.formatMultilineTraceAll this
+        Error.formatChainShortened this

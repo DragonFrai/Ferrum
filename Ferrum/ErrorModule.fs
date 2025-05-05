@@ -1,5 +1,6 @@
 namespace Ferrum
 
+open System
 open System.Diagnostics
 open Ferrum.Internal
 
@@ -75,32 +76,41 @@ module Error =
     let localStackTrace (error: IError) : StackTrace voption =
         Utils.localStackTraceChecked error |> ValueOption.ofObj
 
-    let inline ofException (ex: exn) : IError =
+    let ofException (ex: exn) : IError =
         ExceptionError(ex)
 
-    let inline toException (err: IError) : ErrorException =
+    let toException (err: IError) : ErrorException =
         ErrorException(err)
 
     let throw<'a> (err: IError) : 'a =
         raise (ErrorException(err))
 
-    let inline format (formatter: IErrorFormatter) (err: IError) : string =
+    let format (formatter: IErrorFormatter) (err: IError) : string =
         formatter.Format(err)
 
-    let inline formatFinal (err: IError) : string =
+    let formatBy (format: string) (err: IError) : string =
+        let formatter: IErrorFormatter =
+            match format with
+            | null | "" -> FinalErrorFormatter.Instance // TODO?: Use ChainShortenedErrorFormatter as default?
+            | "f" -> FinalErrorFormatter.Instance
+            | "c" -> ChainErrorFormatter.Instance
+            | "F" -> FinalMultilineErrorFormatter.Instance
+            | "C" -> ChainMultilineErrorFormatter.Instance
+            | "S" -> ChainShortenedErrorFormatter.Instance
+            | _ -> raise (FormatException($"The {format} format string is not supported."))
+        formatter.Format(err)
+
+    let formatFinal (err: IError) : string =
         (FinalErrorFormatter.Instance :> IErrorFormatter).Format(err)
 
-    let inline formatChain (err: IError) : string =
+    let formatFinalMultiline (err: IError) : string =
+        (FinalMultilineErrorFormatter.Instance :> IErrorFormatter).Format(err)
+
+    let formatChain (err: IError) : string =
         (ChainErrorFormatter.Instance :> IErrorFormatter).Format(err)
 
-    let inline formatMultiline (err: IError) : string =
-        (MultilineErrorFormatter.Instance :> IErrorFormatter).Format(err)
+    let formatChainShortened (err: IError) : string =
+        (ChainShortenedErrorFormatter.Instance :> IErrorFormatter).Format(err)
 
-    let inline formatMultilineTrace (err: IError) : string =
-        (MultilineTraceErrorFormatter.Instance :> IErrorFormatter).Format(err)
-
-    let inline formatMultilineTraceAll (err: IError) : string =
-        (MultilineTraceAllErrorFormatter.Instance :> IErrorFormatter).Format(err)
-
-
-
+    let formatChainMultiline (err: IError) : string =
+        (ChainMultilineErrorFormatter.Instance :> IErrorFormatter).Format(err)
