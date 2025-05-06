@@ -42,6 +42,13 @@ module Error =
     let inline aggregateT (reason: string) (errors: IError seq) : AggregateError =
         AggregateTracedError(reason, errors)
 
+    let isAggregate (err: IError) : bool =
+        match err with
+        | :? IAggregateError as err ->
+            err.IsAggregate
+        | _ ->
+            false
+
     let sources (err: IError) : IError seq =
         match err with
         | :? IAggregateError as err ->
