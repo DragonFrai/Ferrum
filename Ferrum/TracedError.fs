@@ -12,14 +12,15 @@ type ITracedError =
     inherit IError
 
     /// <summary>
-    ///
+    /// Stack trace string with trailing newline or null
     /// </summary>
-    /// <remarks> Not null when LocalStackTrace not null </remarks>
-    /// <returns> Stack trace string or null </returns>
+    /// <remarks>
+    /// Not expected to be a stack trace, but it is recommended to follow
+    /// the <see cref="System.Diagnostics.StackTrace.ToString()"/> format.
+    /// </remarks>
     abstract StackTrace: string
 
     /// <summary>
-    ///
+    /// Local stack trace object or null
     /// </summary>
-    /// <returns> Stack trace string or null </returns>
     abstract LocalStackTrace: StackTrace

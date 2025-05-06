@@ -1,8 +1,8 @@
 namespace Ferrum
 
-open System.Collections.Generic
-open System.Collections
 open System.Diagnostics
+
+open Ferrum.Internal
 
 
 type AggregateError(reason: string, errors: IError seq) =
@@ -12,19 +12,9 @@ type AggregateError(reason: string, errors: IError seq) =
             reason
 
         member this.Source =
-            match errors with
-            | :? IReadOnlyList<IError> as errors ->
-                if errors.Count > 0 then ValueSome errors[0] else ValueNone
-            | :? IList<IError> as errors ->
-                if errors.Count > 0 then ValueSome errors[0] else ValueNone
-            | :? IList as errors ->
-                if errors.Count > 0 then ValueSome (errors[0] :?> IError) else ValueNone
-            | errors ->
-                use e = errors.GetEnumerator()
-                if e.MoveNext() then ValueSome e.Current else ValueNone
+            Utils.tryFirst errors
 
     interface IAggregateError with
-
         member this.IsAggregate =
             true
 
