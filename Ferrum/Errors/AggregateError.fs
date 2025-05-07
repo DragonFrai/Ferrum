@@ -1,5 +1,6 @@
 namespace Ferrum
 
+open System
 open System.Diagnostics
 
 open Ferrum.Internal
@@ -20,6 +21,14 @@ type AggregateError(message: string, errors: IError seq) =
 
         member this.InnerErrors: IError seq =
             errors
+
+    override this.ToString() =
+        ErrorFormatter.Default.Format(this)
+
+    interface IFormattable with
+        member this.ToString(format, _formatProvider) =
+            (ErrorFormatter.byFormat format).Format(this)
+
 
 type AggregateTracedError(message: string, errors: IError seq, stackTrace: StackTrace) =
     inherit AggregateError(message, errors)

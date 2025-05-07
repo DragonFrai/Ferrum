@@ -13,6 +13,7 @@ module private String =
         then defaultStr
         else str
 
+
 // Error string Builder
 [<RequireQualifiedAccess>]
 module private SB =
@@ -20,8 +21,7 @@ module private SB =
     let [<Literal>] NoMessage = "<NoMessage>"
     let [<Literal>] Colon = ": "
     let [<Literal>] Error = "Error: "
-    let [<Literal>] CausedBy = "Caused by: "
-    let [<Literal>] FinalStackTrace = "Final stack trace:"
+    let [<Literal>] CausedBy = "Cause: "
 
     let inline create () : StringBuilder =
         StringBuilder()
@@ -40,9 +40,6 @@ module private SB =
 
     let inline appendFinalPrelude (sb: StringBuilder) : StringBuilder =
         sb.Append(Error)
-
-    let inline appendFinalTracePrelude (sb: StringBuilder) : StringBuilder =
-        sb.Append(FinalStackTrace)
 
     let inline appendChainPrelude (sb: StringBuilder) : StringBuilder =
         sb.Append(CausedBy)
@@ -66,21 +63,32 @@ module private SB =
         | null -> sb
         | trace -> sb.Append(trace)
 
+    let inline appendChainWith<'s>
+            ([<InlineIfLambda>] finalAppend: IError -> 's -> 's)
+            ([<InlineIfLambda>] chainAppend: IError -> 's -> 's)
+            ([<InlineIfLambda>] afterRoot: IError -> 's -> 's)
+            (error: IError)
+            (state: 's)
+            : 's =
+        let mutable state = state
+        do state <- finalAppend error state
+        let mutable error = error
+        let mutable innerError = error.InnerError
+        while innerError.IsSome do
+            let innerErrorValue = innerError.Value
+            state <- chainAppend innerErrorValue state
+            error <- innerErrorValue
+            innerError <- innerErrorValue.InnerError
+        state <- afterRoot error state
+        state
+
     let inline appendChain<'s>
             ([<InlineIfLambda>] finalAppend: IError -> 's -> 's)
             ([<InlineIfLambda>] chainAppend: IError -> 's -> 's)
             (error: IError)
             (state: 's)
             : 's =
-        let mutable state = state
-        do state <- finalAppend error state
-        do
-            let mutable source = error.InnerError
-            while source.IsSome do
-                let sourceError = source.Value
-                state <- chainAppend sourceError state
-                source <- sourceError.InnerError
-        state
+        appendChainWith finalAppend chainAppend (fun _e s -> s) error state
 
 
 type FinalMessageErrorFormatter private () =
@@ -89,18 +97,6 @@ type FinalMessageErrorFormatter private () =
     interface IErrorFormatter with
         member this.Format(error) =
             SB.notEmptyOrNoMessage error.Message
-
-type FinalErrorFormatter private () =
-    static let _instance = FinalErrorFormatter()
-    static member Instance: FinalErrorFormatter = _instance
-    interface IErrorFormatter with
-        member this.Format(error) =
-            SB.create ()
-            |> SB.appendFinalPrelude
-            |> SB.appendMessage error
-            |> SB.appendLine
-            |> SB.appendTrace error
-            |> SB.toString
 
 type ChainMessageErrorFormatter private () =
     static let _instance = ChainMessageErrorFormatter()
@@ -114,13 +110,25 @@ type ChainMessageErrorFormatter private () =
                 error
             |> SB.toString
 
+type FinalErrorFormatter private () =
+    static let _instance = FinalErrorFormatter()
+    static member Instance: FinalErrorFormatter = _instance
+    interface IErrorFormatter with
+        member this.Format(error) =
+            SB.create ()
+            |> SB.appendFinalPrelude
+            |> SB.appendMessage error
+            |> SB.appendLine
+            |> SB.appendTrace error
+            |> SB.toString
+
 type ChainErrorFormatter private () =
     static let _instance = ChainErrorFormatter()
     static member Instance: ChainErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
             SB.create ()
-            |> SB.appendChain
+            |> SB.appendChainWith
                 (fun error sb ->
                     sb
                     |> SB.appendFinalPrelude
@@ -131,10 +139,9 @@ type ChainErrorFormatter private () =
                     |> SB.appendChainPrelude
                     |> SB.appendMessage error
                     |> SB.appendLine)
+                (fun error sb ->
+                    sb |> SB.appendTrace error)
                 error
-            |> SB.appendTraceWithPrelude
-                   (fun sb -> sb |> SB.appendFinalTracePrelude |> SB.appendLine)
-                   error
             |> SB.toString
 
 type TraceErrorFormatter private () =
@@ -158,18 +165,3 @@ type TraceErrorFormatter private () =
                     |> SB.appendTrace error)
                 error
             |> SB.toString
-
-[<RequireQualifiedAccess>]
-module ErrorFormatters =
-
-    let General: IErrorFormatter = ChainErrorFormatter.Instance
-
-    let getByFormat (format: string) : IErrorFormatter =
-        match format with
-        | null | "" -> General
-        | "f" -> FinalMessageErrorFormatter.Instance
-        | "c" -> ChainMessageErrorFormatter.Instance
-        | "F" -> FinalErrorFormatter.Instance
-        | "S" -> ChainErrorFormatter.Instance
-        | "T" -> TraceErrorFormatter.Instance
-        | _ -> raise (FormatException($"The {format} format string is not supported."))

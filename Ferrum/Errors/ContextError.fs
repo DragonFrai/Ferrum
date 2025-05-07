@@ -1,15 +1,21 @@
 namespace Ferrum
 
+open System
 open System.Diagnostics
 
 
-type ContextError(context: string, source: IError) =
-
-    override this.ToString() = context
+type ContextError(context: string, innerError: IError) =
 
     interface IError with
         member this.Message = context
-        member this.InnerError = ValueSome source
+        member this.InnerError = ValueSome innerError
+
+    override this.ToString() =
+        ErrorFormatter.Default.Format(this)
+
+    interface IFormattable with
+        member this.ToString(format, _formatProvider) =
+            (ErrorFormatter.byFormat format).Format(this)
 
 
 type ContextTracedError(context: string, source: IError, stackTrace: StackTrace) =

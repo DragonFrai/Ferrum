@@ -17,4 +17,8 @@ module Playground =
         do GreetingFromFile.run ()
         printfn "\n"
 
+        printfn "  === Error formatting ==="
+        do ErrorFormatting.run ()
+        printfn "\n"
+
         0

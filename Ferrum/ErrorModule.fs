@@ -96,4 +96,4 @@ module Error =
         formatter.Format(err)
 
     let formatBy (format: string) (err: IError) : string =
-        (ErrorFormatters.getByFormat format).Format(err)
+        (ErrorFormatter.byFormat format).Format(err)

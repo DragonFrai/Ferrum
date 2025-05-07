@@ -1,5 +1,6 @@
 namespace Ferrum
 
+open System
 open System.Diagnostics
 
 open Ferrum.Internal
@@ -51,3 +52,10 @@ type DynamicError =
     interface ITracedError with
         member this.StackTrace = this.trace
         member this.LocalStackTrace = this.localTrace
+
+    override this.ToString() =
+        ErrorFormatter.Default.Format(this)
+
+    interface IFormattable with
+        member this.ToString(format, _formatProvider) =
+            (ErrorFormatter.byFormat format).Format(this)

@@ -7,7 +7,7 @@ open Ferrum
 
 let singleError = Error.anyhow "Final"
 let chainError = Error.context "Final" <| (Error.context "Middle" <| Error.anyhow "Root")
-let tracedSingleError: IError = DynamicError("Final", "  at final\n")
+let tracedSingleError: IError = DynamicError("Final", "   at final\n")
 let tracedChainError: IError =
     DynamicError(
         "Final",
@@ -15,11 +15,11 @@ let tracedChainError: IError =
             "Middle",
             DynamicError(
                 "Root",
-                "  at root\n"
+                "   at root\n"
             ),
-            "  at middle\n"
+            "   at middle\n"
         ),
-        "  at final\n"
+        "   at final\n"
     )
 
 let stringOfLines (lines: string seq) : string =
@@ -57,21 +57,21 @@ let ``FinalErrorFormatter works`` () =
     let fmt = FinalErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
     do assertFormat fmt chainError "Error: Final\n"
-    do assertFormat fmt tracedSingleError "Error: Final\n  at final\n"
-    do assertFormat fmt tracedChainError "Error: Final\n  at final\n"
+    do assertFormat fmt tracedSingleError "Error: Final\n   at final\n"
+    do assertFormat fmt tracedChainError "Error: Final\n   at final\n"
 
 [<Fact>]
 let ``ChainErrorFormatter works`` () =
     let fmt = ChainErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
-    do assertFormat fmt chainError "Error: Final\nCaused by: Middle\nCaused by: Root\n"
-    do assertFormat fmt tracedSingleError "Error: Final\nFinal stack trace:\n  at final\n"
-    do assertFormat fmt tracedChainError "Error: Final\nCaused by: Middle\nCaused by: Root\nFinal stack trace:\n  at final\n"
+    do assertFormat fmt chainError "Error: Final\nCause: Middle\nCause: Root\n"
+    do assertFormat fmt tracedSingleError "Error: Final\n   at final\n"
+    do assertFormat fmt tracedChainError "Error: Final\nCause: Middle\nCause: Root\n   at root\n"
 
 [<Fact>]
 let ``TraceErrorFormatter works`` () =
     let fmt = TraceErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
-    do assertFormat fmt chainError "Error: Final\nCaused by: Middle\nCaused by: Root\n"
-    do assertFormat fmt tracedSingleError "Error: Final\n  at final\n"
-    do assertFormat fmt tracedChainError "Error: Final\n  at final\nCaused by: Middle\n  at middle\nCaused by: Root\n  at root\n"
+    do assertFormat fmt chainError "Error: Final\nCause: Middle\nCause: Root\n"
+    do assertFormat fmt tracedSingleError "Error: Final\n   at final\n"
+    do assertFormat fmt tracedChainError "Error: Final\n   at final\nCause: Middle\n   at middle\nCause: Root\n   at root\n"

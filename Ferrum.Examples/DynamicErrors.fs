@@ -9,15 +9,15 @@ type SomeError = SomeError
 let run () =
 
     let messageError: IError = Error.anyhow "This is some error"
-    printfn $" > {messageError.FormatChain()}"
+    printfn $" > {Error.format ChainMessageErrorFormatter.Instance messageError}"
     // > This is some error
 
     let contextualError: IError = Error.context "Top error" (Error.anyhow "Root error")
-    printfn $" > {contextualError.FormatChain()}"
+    printfn $" > {Error.format ChainMessageErrorFormatter.Instance contextualError}"
     // > Top error: Root error
 
     let wrappedError: IError = Error.wrap SomeError
-    printfn $" > {wrappedError.FormatChain()}"
+    printfn $" > {Error.format ChainMessageErrorFormatter.Instance wrappedError}"
     // > SomeError
 
     let messageResult: Result<unit, IError> = Result.anyhow "This is some error"

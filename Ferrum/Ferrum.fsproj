@@ -29,7 +29,7 @@
         <Compile Include="Internal.fs" />
         <Compile Include="Formatting\ErrorFormatter.fs" />
         <Compile Include="Formatting\Formatters.fs" />
-        <Compile Include="Errors\BaseError.fs" />
+        <Compile Include="Formatting\ErrorFormatterModule.fs" />
         <Compile Include="Errors\MessageError.fs" />
         <Compile Include="Errors\ContextError.fs" />
         <Compile Include="Errors\WrappedError.fs" />
