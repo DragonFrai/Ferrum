@@ -18,28 +18,28 @@ module Error =
         MessageError(message)
 
     [<StackTraceHidden>]
-    let inline errT (message: string) : IError =
+    let inline errTraced (message: string) : IError =
         MessageTracedError(message)
 
     let inline context (context: string) (source: IError) : IError =
         ContextError(context, source)
 
     [<StackTraceHidden>]
-    let inline contextT (context: string) (source: IError) : IError =
+    let inline contextTraced (context: string) (source: IError) : IError =
         ContextTracedError(context, source)
 
     let inline wrap (error: 'e) : IError =
         WrappedError(error)
 
     [<StackTraceHidden>]
-    let inline wrapT (error: 'e) : IError =
+    let inline wrapTraced (error: 'e) : IError =
         WrappedTracedError(error)
 
     let inline aggregate (message: string) (errors: IError seq) : AggregateError =
         AggregateError(message, errors)
 
     [<StackTraceHidden>]
-    let inline aggregateT (message: string) (errors: IError seq) : AggregateError =
+    let inline aggregateTraced (message: string) (errors: IError seq) : AggregateError =
         AggregateTracedError(message, errors)
 
     let isAggregate (err: IError) : bool =

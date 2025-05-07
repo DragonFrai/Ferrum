@@ -12,7 +12,7 @@ type IError with
         ContextError(context, this)
 
     [<StackTraceHidden>]
-    member inline this.ContextT(context: string) : IError =
+    member inline this.ContextTraced(context: string) : IError =
         ContextTracedError(context, this)
 
     member this.Chain() : IError seq =

@@ -34,3 +34,10 @@ module internal Utils =
         | errors ->
             use e = errors.GetEnumerator()
             if e.MoveNext() then ValueSome e.Current else ValueNone
+
+    [<RequireQualifiedAccess>]
+    module ValueOption =
+        let toOption (value: 'a voption) : 'a option =
+            match value with
+            | ValueNone -> None
+            | ValueSome x -> Some x

@@ -10,9 +10,9 @@ let run () =
 
     let error = Error.context "User not created" (Error.context "Name already used" (Error.err "File already exists"))
     let errorTraced =
-        Error.contextT "User not created"
-            (Error.contextT "Name already used"
-                (Error.errT "File already exists"))
+        Error.contextTraced "User not created"
+            (Error.contextTraced "Name already used"
+                (Error.errTraced "File already exists"))
 
     //
 
