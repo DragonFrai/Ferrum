@@ -14,11 +14,11 @@ module Error =
     let inline innerError (err: IError) : IError voption =
         err.InnerError
 
-    let inline anyhow (message: string) : IError =
+    let inline err (message: string) : IError =
         MessageError(message)
 
     [<StackTraceHidden>]
-    let inline anyhowT (message: string) : IError =
+    let inline errT (message: string) : IError =
         MessageTracedError(message)
 
     let inline context (context: string) (source: IError) : IError =

@@ -6,14 +6,14 @@ open Ferrum
 open Ferrum.Graphviz
 
 
-let singleError = Error.anyhow "Final"
-let chainError = Error.context "Final" (Error.context "Middle" <| Error.anyhow "Root")
-let aggregateError = Error.aggregate "Agg" (["Err1"; "Err2"] |> List.map Error.anyhow)
-let aggregateWihDupsError = Error.aggregate "Err" (["Err"; "Err"] |> List.map Error.anyhow)
+let singleError = Error.err "Final"
+let chainError = Error.context "Final" (Error.context "Middle" <| Error.err "Root")
+let aggregateError = Error.aggregate "Agg" (["Err1"; "Err2"] |> List.map Error.err)
+let aggregateWihDupsError = Error.aggregate "Err" (["Err"; "Err"] |> List.map Error.err)
 let aggregate2Error =
     Error.aggregate "Agg" [
-        Error.context "Ctx1" (Error.anyhow "Err1")
-        Error.context "Ctx2" (Error.anyhow "Err2")
+        Error.context "Ctx1" (Error.err "Err1")
+        Error.context "Ctx2" (Error.err "Err2")
     ]
 
 let aggregate2Exn () =

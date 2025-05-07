@@ -5,8 +5,8 @@ open Xunit
 open Ferrum
 
 
-let singleError = Error.anyhow "Final"
-let chainError = Error.context "Final" <| (Error.context "Middle" <| Error.anyhow "Root")
+let singleError = Error.err "Final"
+let chainError = Error.context "Final" <| (Error.context "Middle" <| Error.err "Root")
 let tracedSingleError: IError = DynamicError("Final", "   at final\n")
 let tracedChainError: IError =
     DynamicError(

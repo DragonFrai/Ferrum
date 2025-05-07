@@ -6,8 +6,8 @@ type Result<'a> = Result<'a, IError>
 [<RequireQualifiedAccess>]
 module Result =
 
-    let anyhow (message: string) : Result<'a, IError> =
-        Error (Error.anyhow message)
+    let err (message: string) : Result<'a, IError> =
+        Error (Error.err message)
 
     let context (context: string) (result: Result<'a, IError>) : Result<'a, IError> =
         match result with

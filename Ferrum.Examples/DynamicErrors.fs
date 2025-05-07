@@ -8,11 +8,11 @@ type SomeError = SomeError
 
 let run () =
 
-    let messageError: IError = Error.anyhow "This is some error"
+    let messageError: IError = Error.err "This is some error"
     printfn $" > {Error.format ChainMessageErrorFormatter.Instance messageError}"
     // > This is some error
 
-    let contextualError: IError = Error.context "Top error" (Error.anyhow "Root error")
+    let contextualError: IError = Error.context "Top error" (Error.err "Root error")
     printfn $" > {Error.format ChainMessageErrorFormatter.Instance contextualError}"
     // > Top error: Root error
 
@@ -20,11 +20,11 @@ let run () =
     printfn $" > {Error.format ChainMessageErrorFormatter.Instance wrappedError}"
     // > SomeError
 
-    let messageResult: Result<unit, IError> = Result.anyhow "This is some error"
+    let messageResult: Result<unit, IError> = Result.err "This is some error"
     printfn $" > {Utils.formatResultChain messageResult}"
     // > Error (This is some error)
 
-    let contextualResult: Result<unit, IError> = Result.context "Top error" (Result.anyhow "Root error")
+    let contextualResult: Result<unit, IError> = Result.context "Top error" (Result.err "Root error")
     printfn $" > {Utils.formatResultChain contextualResult}"
     // > Error (Top error: Root error)
 

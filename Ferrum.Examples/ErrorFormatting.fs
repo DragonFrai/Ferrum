@@ -8,11 +8,11 @@ open Ferrum
 
 let run () =
 
-    let error = Error.context "User not created" (Error.context "Name already used" (Error.anyhow "File already exists"))
+    let error = Error.context "User not created" (Error.context "Name already used" (Error.err "File already exists"))
     let errorTraced =
         Error.contextT "User not created"
             (Error.contextT "Name already used"
-                (Error.anyhowT "File already exists"))
+                (Error.errT "File already exists"))
 
     //
 
