@@ -11,8 +11,8 @@ module Error =
     let inline message (err: IError) : string =
         err.Message
 
-    let inline innerError (err: IError) : IError voption =
-        err.InnerError
+    let innerError (err: IError) : IError option =
+        err.InnerError |> Utils.ValueOption.toOption
 
     let inline err (message: string) : IError =
         MessageError(message)
@@ -77,11 +77,11 @@ module Error =
             | ValueSome err -> loop err
         loop err
 
-    let stackTrace (error: IError) : string voption =
-        Utils.stackTraceChecked error |> ValueOption.ofObj
+    let stackTrace (error: IError) : string option =
+        Utils.stackTraceChecked error |> Option.ofObj
 
-    let localStackTrace (error: IError) : StackTrace voption =
-        Utils.localStackTraceChecked error |> ValueOption.ofObj
+    let localStackTrace (error: IError) : StackTrace option =
+        Utils.localStackTraceChecked error |> Option.ofObj
 
     let ofException (ex: exn) : IError =
         ExceptionError(ex)

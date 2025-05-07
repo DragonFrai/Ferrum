@@ -21,10 +21,10 @@ type IError with
     member this.GetRoot() : IError =
         Error.getRoot this
 
-    member this.GetStackTrace() : string voption =
+    member this.GetStackTrace() : string option =
         Error.stackTrace this
 
-    member this.GetLocalStackTrace() : StackTrace voption =
+    member this.GetLocalStackTrace() : StackTrace option =
         Error.localStackTrace this
 
     member this.ToException() : ErrorException =
