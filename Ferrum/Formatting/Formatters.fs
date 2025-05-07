@@ -161,9 +161,12 @@ type TraceErrorFormatter private () =
 
 [<RequireQualifiedAccess>]
 module ErrorFormatters =
+
+    let General: IErrorFormatter = ChainErrorFormatter.Instance
+
     let getByFormat (format: string) : IErrorFormatter =
         match format with
-        | null | "" -> ChainErrorFormatter.Instance
+        | null | "" -> General
         | "f" -> FinalMessageErrorFormatter.Instance
         | "c" -> ChainMessageErrorFormatter.Instance
         | "F" -> FinalErrorFormatter.Instance
