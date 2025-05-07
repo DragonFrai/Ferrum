@@ -30,7 +30,7 @@ type IError with
     member this.ToException() : ErrorException =
         ErrorException(this)
 
-    member this.Throw<'a>() : 'a =
+    member this.Raise<'a>() : 'a =
         raise (ErrorException(this))
 
     member inline this.Format(formatter: IErrorFormatter) : string =

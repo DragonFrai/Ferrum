@@ -14,6 +14,11 @@ module Result =
         | Ok x -> Ok x
         | Error err -> Error (Error.context context err)
 
+    let contextWith (context: unit -> string) (result: Result<'a, IError>) : Result<'a, IError> =
+        match result with
+        | Ok x -> Ok x
+        | Error err -> Error (Error.context (context ()) err)
+
     let wrap (result: Result<'a, 'e>) : Result<'a, IError> =
         match result with
         | Ok x -> Ok x
@@ -28,7 +33,7 @@ module Result =
         try Ok(f ())
         with ex -> Error (Error.ofException ex)
 
-    let getOrThrowError (result: Result<'a, IError>) : 'a =
+    let getOrRaiseError (result: Result<'a, IError>) : 'a =
         match result with
         | Ok x -> x
-        | Error err -> Error.throw err
+        | Error err -> Error.raise err

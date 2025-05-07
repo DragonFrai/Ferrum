@@ -38,7 +38,7 @@
         <Compile Include="ExceptionInterop.fs" />
         <Compile Include="ErrorModule.fs" />
         <Compile Include="ErrorExtensions.fs" />
-        <Compile Include="Result.fs" />
+        <Compile Include="ResultModule.fs" />
     </ItemGroup>
 
 

@@ -89,7 +89,7 @@ module Error =
     let toException (err: IError) : ErrorException =
         ErrorException(err)
 
-    let throw<'a> (err: IError) : 'a =
+    let raise<'a> (err: IError) : 'a =
         raise (ErrorException(err))
 
     let format (formatter: IErrorFormatter) (err: IError) : string =
