@@ -96,13 +96,4 @@ module Error =
         formatter.Format(err)
 
     let formatBy (format: string) (err: IError) : string =
-        let formatter: IErrorFormatter =
-            match format with
-            | null | "" -> ChainErrorFormatter.Instance
-            | "f" -> FinalMessageErrorFormatter.Instance
-            | "c" -> ChainMessageErrorFormatter.Instance
-            | "F" -> FinalErrorFormatter.Instance
-            | "S" -> ChainErrorFormatter.Instance
-            | "T" -> TraceErrorFormatter.Instance
-            | _ -> raise (FormatException($"The {format} format string is not supported."))
-        formatter.Format(err)
+        (ErrorFormatters.getByFormat format).Format(err)

@@ -37,7 +37,7 @@ let assertFormatByLines (formatter: IErrorFormatter) (error: IError) (testers: (
 
 
 [<Fact>]
-let ``FinalErrorFormatter works`` () =
+let ``FinalMessageErrorFormatter works`` () =
     let fmt = FinalMessageErrorFormatter.Instance
     do assertFormat fmt singleError "Final"
     do assertFormat fmt chainError "Final"
@@ -45,7 +45,15 @@ let ``FinalErrorFormatter works`` () =
     do assertFormat fmt tracedChainError "Final"
 
 [<Fact>]
-let ``FinalMultilineErrorFormatter works`` () =
+let ``ChainMessageErrorFormatter works`` () =
+    let fmt = ChainMessageErrorFormatter.Instance
+    do assertFormat fmt singleError "Final"
+    do assertFormat fmt chainError "Final: Middle: Root"
+    do assertFormat fmt tracedSingleError "Final"
+    do assertFormat fmt tracedChainError "Final: Middle: Root"
+
+[<Fact>]
+let ``FinalErrorFormatter works`` () =
     let fmt = FinalErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
     do assertFormat fmt chainError "Error: Final\n"
@@ -54,25 +62,16 @@ let ``FinalMultilineErrorFormatter works`` () =
 
 [<Fact>]
 let ``ChainErrorFormatter works`` () =
-    let fmt = ChainMessageErrorFormatter.Instance
-    do assertFormat fmt singleError "Final"
-    do assertFormat fmt chainError "Final: Middle: Root"
-    do assertFormat fmt tracedSingleError "Final"
-    do assertFormat fmt tracedChainError "Final: Middle: Root"
-
-[<Fact>]
-let ``ChainMultilineErrorFormatter works`` () =
-    let fmt = TraceErrorFormatter.Instance
-    do assertFormat fmt singleError "Error: Final\n"
-    do assertFormat fmt chainError "Error: Final\nCaused by: Middle\nCaused by: Root\n"
-    do assertFormat fmt tracedSingleError "Error: Final\n  at final\n"
-    do assertFormat fmt tracedChainError "Error: Final\n  at final\nCaused by: Middle\n  at middle\nCaused by: Root\n  at root\n"
-
-[<Fact>]
-let ``ChainShortErrorFormatter works`` () =
-    let fmt = ShortErrorFormatter.Instance
+    let fmt = ChainErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
     do assertFormat fmt chainError "Error: Final\nCaused by: Middle\nCaused by: Root\n"
     do assertFormat fmt tracedSingleError "Error: Final\nFinal stack trace:\n  at final\n"
     do assertFormat fmt tracedChainError "Error: Final\nCaused by: Middle\nCaused by: Root\nFinal stack trace:\n  at final\n"
 
+[<Fact>]
+let ``TraceErrorFormatter works`` () =
+    let fmt = TraceErrorFormatter.Instance
+    do assertFormat fmt singleError "Error: Final\n"
+    do assertFormat fmt chainError "Error: Final\nCaused by: Middle\nCaused by: Root\n"
+    do assertFormat fmt tracedSingleError "Error: Final\n  at final\n"
+    do assertFormat fmt tracedChainError "Error: Final\n  at final\nCaused by: Middle\n  at middle\nCaused by: Root\n  at root\n"

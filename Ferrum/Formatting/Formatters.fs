@@ -158,3 +158,15 @@ type TraceErrorFormatter private () =
                     |> SB.appendTrace error)
                 error
             |> SB.toString
+
+[<RequireQualifiedAccess>]
+module ErrorFormatters =
+    let getByFormat (format: string) : IErrorFormatter =
+        match format with
+        | null | "" -> ChainErrorFormatter.Instance
+        | "f" -> FinalMessageErrorFormatter.Instance
+        | "c" -> ChainMessageErrorFormatter.Instance
+        | "F" -> FinalErrorFormatter.Instance
+        | "S" -> ChainErrorFormatter.Instance
+        | "T" -> TraceErrorFormatter.Instance
+        | _ -> raise (FormatException($"The {format} format string is not supported."))

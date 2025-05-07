@@ -26,9 +26,9 @@
         <Compile Include="Error.fs" />
         <Compile Include="TracedError.fs" />
         <Compile Include="AggregateError.fs" />
-        <Compile Include="ErrorFormatter.fs" />
         <Compile Include="Internal.fs" />
-        <Compile Include="Formatters\Formatters.fs" />
+        <Compile Include="Formatting\ErrorFormatter.fs" />
+        <Compile Include="Formatting\Formatters.fs" />
         <Compile Include="Errors\MessageError.fs" />
         <Compile Include="Errors\ContextError.fs" />
         <Compile Include="Errors\WrappedError.fs" />
