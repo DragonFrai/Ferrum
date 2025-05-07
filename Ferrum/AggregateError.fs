@@ -18,4 +18,4 @@ type IAggregateError =
     /// </remarks>
     abstract IsAggregate: bool
 
-    abstract Sources: IError seq
+    abstract InnerErrors: IError seq

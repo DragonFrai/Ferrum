@@ -6,47 +6,47 @@ open Ferrum.Internal
 
 
 type DynamicError =
-    val private reason: string
-    val private source: IError voption
-    val private sources: IError seq
+    val private message: string
+    val private innerError: IError voption
+    val private innerErrors: IError seq
     val private isAggregate: bool
     val private trace: string
     val private localTrace: StackTrace
 
-    new(reason: string) =
-        { reason = reason; source = ValueNone; sources = Seq.empty; isAggregate = false; trace = null; localTrace = null }
+    new(message: string) =
+        { message = message; innerError = ValueNone; innerErrors = Seq.empty; isAggregate = false; trace = null; localTrace = null }
 
-    new(reason: string, source: IError) =
-        { reason = reason; source = ValueSome source; sources = Seq.singleton source; isAggregate = false; trace = null; localTrace = null }
+    new(message: string, source: IError) =
+        { message = message; innerError = ValueSome source; innerErrors = Seq.singleton source; isAggregate = false; trace = null; localTrace = null }
 
-    new(reason: string, sources: IError seq) =
-        { reason = reason; source = Utils.tryFirst sources; sources = sources; isAggregate = true; trace = null; localTrace = null }
+    new(message: string, sources: IError seq) =
+        { message = message; innerError = Utils.tryFirst sources; innerErrors = sources; isAggregate = true; trace = null; localTrace = null }
 
-    new(reason: string, trace: string) =
-        { reason = reason; source = ValueNone; sources = Seq.empty; isAggregate = false; trace = trace; localTrace = null }
+    new(message: string, trace: string) =
+        { message = message; innerError = ValueNone; innerErrors = Seq.empty; isAggregate = false; trace = trace; localTrace = null }
 
-    new(reason: string, source: IError, trace: string) =
-        { reason = reason; source = ValueSome source; sources = Seq.singleton source; isAggregate = false; trace = trace; localTrace = null }
+    new(message: string, source: IError, trace: string) =
+        { message = message; innerError = ValueSome source; innerErrors = Seq.singleton source; isAggregate = false; trace = trace; localTrace = null }
 
-    new(reason: string, sources: IError seq, trace: string) =
-        { reason = reason; source = Utils.tryFirst sources; sources = sources; isAggregate = true; trace = trace; localTrace = null }
+    new(message: string, sources: IError seq, trace: string) =
+        { message = message; innerError = Utils.tryFirst sources; innerErrors = sources; isAggregate = true; trace = trace; localTrace = null }
 
-    new(reason: string, localTrace: StackTrace) =
-        { reason = reason; source = ValueNone; sources = Seq.empty; isAggregate = false; trace = localTrace.ToString(); localTrace = localTrace }
+    new(message: string, localTrace: StackTrace) =
+        { message = message; innerError = ValueNone; innerErrors = Seq.empty; isAggregate = false; trace = localTrace.ToString(); localTrace = localTrace }
 
-    new(reason: string, source: IError, localTrace: StackTrace) =
-        { reason = reason; source = ValueSome source; sources = Seq.singleton source; isAggregate = false; trace = localTrace.ToString(); localTrace = localTrace }
+    new(message: string, source: IError, localTrace: StackTrace) =
+        { message = message; innerError = ValueSome source; innerErrors = Seq.singleton source; isAggregate = false; trace = localTrace.ToString(); localTrace = localTrace }
 
-    new(reason: string, sources: IError seq, localTrace: StackTrace) =
-        { reason = reason; source = Utils.tryFirst sources; sources = sources; isAggregate = true; trace = localTrace.ToString(); localTrace = localTrace }
+    new(message: string, sources: IError seq, localTrace: StackTrace) =
+        { message = message; innerError = Utils.tryFirst sources; innerErrors = sources; isAggregate = true; trace = localTrace.ToString(); localTrace = localTrace }
 
     interface IError with
-        member this.Reason = this.reason
-        member this.Source = this.source
+        member this.Message = this.message
+        member this.InnerError = this.innerError
 
     interface IAggregateError with
         member this.IsAggregate = this.isAggregate
-        member this.Sources = this.sources
+        member this.InnerErrors = this.innerErrors
 
     interface ITracedError with
         member this.StackTrace = this.trace

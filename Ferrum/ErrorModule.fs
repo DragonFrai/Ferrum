@@ -8,18 +8,18 @@ open Ferrum.Internal
 [<RequireQualifiedAccess>]
 module Error =
 
-    let inline reason (err: IError) : string =
-        err.Reason
+    let inline message (err: IError) : string =
+        err.Message
 
-    let inline source (err: IError) : IError voption =
-        err.Source
+    let inline innerError (err: IError) : IError voption =
+        err.InnerError
 
-    let inline message (reason: string) : IError =
-        MessageError(reason)
+    let inline anyhow (message: string) : IError =
+        MessageError(message)
 
     [<StackTraceHidden>]
-    let inline messageT (reason: string) : IError =
-        MessageTracedError(reason)
+    let inline anyhowT (message: string) : IError =
+        MessageTracedError(message)
 
     let inline context (context: string) (source: IError) : IError =
         ContextError(context, source)
@@ -35,12 +35,12 @@ module Error =
     let inline wrapT (error: 'e) : IError =
         WrappedTracedError(error)
 
-    let inline aggregate (reason: string) (errors: IError seq) : AggregateError =
-        AggregateError(reason, errors)
+    let inline aggregate (message: string) (errors: IError seq) : AggregateError =
+        AggregateError(message, errors)
 
     [<StackTraceHidden>]
-    let inline aggregateT (reason: string) (errors: IError seq) : AggregateError =
-        AggregateTracedError(reason, errors)
+    let inline aggregateT (message: string) (errors: IError seq) : AggregateError =
+        AggregateTracedError(message, errors)
 
     let isAggregate (err: IError) : bool =
         match err with
@@ -52,9 +52,9 @@ module Error =
     let sources (err: IError) : IError seq =
         match err with
         | :? IAggregateError as err ->
-            err.Sources
+            err.InnerErrors
         | err ->
-            match err.Source with
+            match err.InnerError with
             | ValueNone -> Seq.empty
             | ValueSome source -> Seq.singleton source
 
@@ -65,14 +65,14 @@ module Error =
                 | ValueNone -> ()
                 | ValueSome err ->
                     yield err
-                    yield! loop err.Source
+                    yield! loop err.InnerError
             }
             yield! loop (ValueSome err)
         }
 
     let getRoot (err: IError) : IError =
         let rec loop (current: IError) =
-            match current.Source with
+            match current.InnerError with
             | ValueNone -> current
             | ValueSome err -> loop err
         loop err

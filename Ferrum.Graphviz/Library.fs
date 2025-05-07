@@ -69,11 +69,11 @@ type GraphvizErrorFormatter private () =
             let getErrorSources (err: IError) =
                 match err with
                 | :? IAggregateError as err ->
-                    err.Sources
+                    err.InnerErrors
                 | err ->
-                    match err.Source with
+                    match err.InnerError with
                     | ValueSome err -> Seq.singleton err
                     | ValueNone -> Seq.empty
-            error |> GraphvizUtils.formatTree (fun e -> e.Reason) getErrorSources
+            error |> GraphvizUtils.formatTree (fun e -> e.Message) getErrorSources
 
 

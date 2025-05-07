@@ -8,10 +8,10 @@ type SimpleError =
     | SimpleCase
     with
         interface IError with
-            member this.Reason =
+            member this.Message =
                 match this with
                 | SimpleCase -> "Some simple error case"
-            member this.Source =
+            member this.InnerError =
                 ValueNone
 
 type ComplexError =
@@ -19,11 +19,11 @@ type ComplexError =
     | SomeError
     with
         interface IError with
-            member this.Reason =
+            member this.Message =
                 match this with
                 | Source _ -> "Error caused by simple error source"
                 | SomeError -> "Some complex error case"
-            member this.Source =
+            member this.InnerError =
                 match this with
                 | Source simpleError -> ValueSome simpleError
                 | SomeError -> ValueNone

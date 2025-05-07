@@ -8,8 +8,8 @@ type WrappedError<'e>(error: 'e) =
     override this.ToString() = $"{error}"
 
     interface IError with
-        member this.Reason = $"{error}"
-        member this.Source = ValueNone
+        member this.Message = $"{error}"
+        member this.InnerError = ValueNone
 
 
 type WrappedTracedError<'e>(error: 'e, stackTrace: StackTrace) =

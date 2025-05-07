@@ -6,8 +6,8 @@ type Result<'a> = Result<'a, IError>
 [<RequireQualifiedAccess>]
 module Result =
 
-    let message (message: string) : Result<'a, IError> =
-        Error (Error.message message)
+    let anyhow (message: string) : Result<'a, IError> =
+        Error (Error.anyhow message)
 
     let context (context: string) (result: Result<'a, IError>) : Result<'a, IError> =
         match result with
@@ -19,10 +19,10 @@ module Result =
         | Ok x -> Ok x
         | Error err -> Error (Error.wrap err)
 
-    let aggregate (reason: string) (result: Result<'a, IError seq>) : Result<'a, IError> =
+    let aggregate (message: string) (result: Result<'a, IError seq>) : Result<'a, IError> =
         match result with
         | Ok x -> Ok x
-        | Error err -> Error (Error.aggregate reason err)
+        | Error err -> Error (Error.aggregate message err)
 
     let catchToError (f: unit -> 'a) : Result<'a, IError> =
         try Ok(f ())

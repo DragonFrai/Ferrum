@@ -17,7 +17,7 @@ module private String =
 [<RequireQualifiedAccess>]
 module private SB =
 
-    let [<Literal>] NoReason = "<NoReason>"
+    let [<Literal>] NoMessage = "<NoMessage>"
     let [<Literal>] Colon = ": "
     let [<Literal>] Error = "Error: "
     let [<Literal>] CausedBy = "Caused by: "
@@ -32,11 +32,8 @@ module private SB =
     let inline toString (sb: StringBuilder) : string =
         sb.ToString()
 
-    let inline notEmptyOrNoReason (reason: string) : string =
-        String.notEmptyOr NoReason reason
-
-    let inline reasonLength (error: IError) : int =
-        (notEmptyOrNoReason error.Reason).Length
+    let inline notEmptyOrNoMessage (message: string) : string =
+        String.notEmptyOr NoMessage message
 
     let inline appendColon (sb: StringBuilder) : StringBuilder =
         sb.Append(Colon)
@@ -50,8 +47,8 @@ module private SB =
     let inline appendChainPrelude (sb: StringBuilder) : StringBuilder =
         sb.Append(CausedBy)
 
-    let inline appendReason (error: IError) (sb: StringBuilder) : StringBuilder =
-        sb.Append(notEmptyOrNoReason error.Reason)
+    let inline appendMessage (error: IError) (sb: StringBuilder) : StringBuilder =
+        sb.Append(notEmptyOrNoMessage error.Message)
 
     let inline appendTraceWithPrelude
             ([<InlineIfLambda>] prelude: StringBuilder -> StringBuilder)
@@ -78,11 +75,11 @@ module private SB =
         let mutable state = state
         do state <- finalAppend error state
         do
-            let mutable source = error.Source
+            let mutable source = error.InnerError
             while source.IsSome do
                 let sourceError = source.Value
                 state <- chainAppend sourceError state
-                source <- sourceError.Source
+                source <- sourceError.InnerError
         state
 
 
@@ -91,7 +88,7 @@ type FinalErrorFormatter private () =
     static member Instance: FinalErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
-            SB.notEmptyOrNoReason error.Reason
+            SB.notEmptyOrNoMessage error.Message
 
 type FinalMultilineErrorFormatter private () =
     static let _instance = FinalMultilineErrorFormatter()
@@ -100,7 +97,7 @@ type FinalMultilineErrorFormatter private () =
         member this.Format(error) =
             SB.create ()
             |> SB.appendFinalPrelude
-            |> SB.appendReason error
+            |> SB.appendMessage error
             |> SB.appendLine
             |> SB.appendTrace error
             |> SB.toString
@@ -112,8 +109,8 @@ type ChainErrorFormatter private () =
         member this.Format(error) =
             SB.create ()
             |> SB.appendChain
-                (fun error sb -> sb |> SB.appendReason error)
-                (fun error sb -> sb |> SB.appendColon |> SB.appendReason error)
+                (fun error sb -> sb |> SB.appendMessage error)
+                (fun error sb -> sb |> SB.appendColon |> SB.appendMessage error)
                 error
             |> SB.toString
 
@@ -127,13 +124,13 @@ type ChainMultilineErrorFormatter private () =
                 (fun error sb ->
                     sb
                     |> SB.appendFinalPrelude
-                    |> SB.appendReason error
+                    |> SB.appendMessage error
                     |> SB.appendLine
                     |> SB.appendTrace error)
                 (fun error sb ->
                     sb
                     |> SB.appendChainPrelude
-                    |> SB.appendReason error
+                    |> SB.appendMessage error
                     |> SB.appendLine
                     |> SB.appendTrace error)
                 error
@@ -149,12 +146,12 @@ type ChainShortenedErrorFormatter private () =
                 (fun error sb ->
                     sb
                     |> SB.appendFinalPrelude
-                    |> SB.appendReason error
+                    |> SB.appendMessage error
                     |> SB.appendLine)
                 (fun error sb ->
                     sb
                     |> SB.appendChainPrelude
-                    |> SB.appendReason error
+                    |> SB.appendMessage error
                     |> SB.appendLine)
                 error
             |> SB.appendTraceWithPrelude

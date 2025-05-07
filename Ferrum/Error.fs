@@ -5,7 +5,7 @@ namespace Ferrum
 type IError =
 
     /// <summary> </summary>
-    /// <returns> Reason string or null </returns>
-    abstract Reason: string
+    /// <returns> Message string or null </returns>
+    abstract Message: string
 
-    abstract Source: IError voption
+    abstract InnerError: IError voption

@@ -98,10 +98,10 @@ type SimpleError =
     | SimpleCase
     with
         interface IError with
-            member this.Reason =
+            member this.Message =
                 match this with
                 | SimpleCase -> "Some simple error case"
-            member this.Source =
+            member this.InnerError =
                 ValueNone
 
 type ComplexError =
@@ -109,11 +109,11 @@ type ComplexError =
     | SomeError
     with
         interface IError with
-            member this.Reason =
+            member this.Message =
                 match this with
                 | Source _ -> "Error caused by simple error source"
                 | SomeError -> "Some complex error case"
-            member this.Source =
+            member this.InnerError =
                 match this with
                 | Source simpleError -> ValueSome simpleError
                 | SomeError -> ValueNone
@@ -133,7 +133,7 @@ printfn $" > {complexErrorWithSource.Format(ErrorFormatters.ChainErrorFormatter.
 
 ## Why not Exceptions?
 Exceptions have all the properties that IErrors have.
-Literally Reason <=> Message, Source <=> InnerException, StackTrace <=> StackTrace. 
+Literally Message <=> Message, InnerError <=> InnerException, StackTrace <=> StackTrace. 
 The only difference is that IError is a bit more focused on using in Result 
 and is possibly more lightweight.
 It is easy to implement a similar utilities for exn. 
