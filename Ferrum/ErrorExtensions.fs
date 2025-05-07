@@ -39,16 +39,16 @@ type IError with
         Error.format formatter this
 
     member inline this.FormatFinal() : string =
-        Error.formatFinal this
+        Error.formatFinalMessage this
 
     member inline this.FormatChain() : string =
-        Error.formatChain this
+        Error.formatChainMessage this
 
     member inline this.FormatMultiline() : string =
-        Error.formatChainMultiline this
+        Error.formatTrace this
 
     member inline this.FormatMultilineTrace() : string =
-        Error.formatFinalMultiline this
+        Error.formatFinal this
 
     member inline this.FormatMultilineTraceAll() : string =
-        Error.formatChainShortened this
+        Error.formatChain this

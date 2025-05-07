@@ -14,4 +14,4 @@ module Utils =
     let formatResultChain (result: Result<'a, IError>) : string =
         match result with
         | Ok x -> $"Ok (%A{x})"
-        | Error err -> $"Error ({err.Format(ChainErrorFormatter.Instance)})"
+        | Error err -> $"Error ({err.Format(ChainMessageErrorFormatter.Instance)})"

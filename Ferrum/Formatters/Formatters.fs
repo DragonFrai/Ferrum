@@ -83,16 +83,16 @@ module private SB =
         state
 
 
-type FinalErrorFormatter private () =
-    static let _instance = FinalErrorFormatter()
-    static member Instance: FinalErrorFormatter = _instance
+type FinalMessageErrorFormatter private () =
+    static let _instance = FinalMessageErrorFormatter()
+    static member Instance: FinalMessageErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
             SB.notEmptyOrNoMessage error.Message
 
-type FinalMultilineErrorFormatter private () =
-    static let _instance = FinalMultilineErrorFormatter()
-    static member Instance: FinalMultilineErrorFormatter = _instance
+type FinalErrorFormatter private () =
+    static let _instance = FinalErrorFormatter()
+    static member Instance: FinalErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
             SB.create ()
@@ -102,9 +102,9 @@ type FinalMultilineErrorFormatter private () =
             |> SB.appendTrace error
             |> SB.toString
 
-type ChainErrorFormatter private () =
-    static let _instance = ChainErrorFormatter()
-    static member Instance: ChainErrorFormatter = _instance
+type ChainMessageErrorFormatter private () =
+    static let _instance = ChainMessageErrorFormatter()
+    static member Instance: ChainMessageErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
             SB.create ()
@@ -114,31 +114,9 @@ type ChainErrorFormatter private () =
                 error
             |> SB.toString
 
-type ChainMultilineErrorFormatter private () =
-    static let _instance = ChainMultilineErrorFormatter()
-    static member Instance: ChainMultilineErrorFormatter = _instance
-    interface IErrorFormatter with
-        member this.Format(error) =
-            SB.create ()
-            |> SB.appendChain
-                (fun error sb ->
-                    sb
-                    |> SB.appendFinalPrelude
-                    |> SB.appendMessage error
-                    |> SB.appendLine
-                    |> SB.appendTrace error)
-                (fun error sb ->
-                    sb
-                    |> SB.appendChainPrelude
-                    |> SB.appendMessage error
-                    |> SB.appendLine
-                    |> SB.appendTrace error)
-                error
-            |> SB.toString
-
-type ChainShortenedErrorFormatter private () =
-    static let _instance = ChainShortenedErrorFormatter()
-    static member Instance: ChainShortenedErrorFormatter = _instance
+type ChainErrorFormatter private () =
+    static let _instance = ChainErrorFormatter()
+    static member Instance: ChainErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
             SB.create ()
@@ -157,4 +135,26 @@ type ChainShortenedErrorFormatter private () =
             |> SB.appendTraceWithPrelude
                    (fun sb -> sb |> SB.appendFinalTracePrelude |> SB.appendLine)
                    error
+            |> SB.toString
+
+type TraceErrorFormatter private () =
+    static let _instance = TraceErrorFormatter()
+    static member Instance: TraceErrorFormatter = _instance
+    interface IErrorFormatter with
+        member this.Format(error) =
+            SB.create ()
+            |> SB.appendChain
+                (fun error sb ->
+                    sb
+                    |> SB.appendFinalPrelude
+                    |> SB.appendMessage error
+                    |> SB.appendLine
+                    |> SB.appendTrace error)
+                (fun error sb ->
+                    sb
+                    |> SB.appendChainPrelude
+                    |> SB.appendMessage error
+                    |> SB.appendLine
+                    |> SB.appendTrace error)
+                error
             |> SB.toString

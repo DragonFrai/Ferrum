@@ -98,26 +98,26 @@ module Error =
     let formatBy (format: string) (err: IError) : string =
         let formatter: IErrorFormatter =
             match format with
-            | null | "" -> FinalErrorFormatter.Instance // TODO?: Use ChainShortenedErrorFormatter as default?
-            | "f" -> FinalErrorFormatter.Instance
-            | "c" -> ChainErrorFormatter.Instance
-            | "F" -> FinalMultilineErrorFormatter.Instance
-            | "C" -> ChainMultilineErrorFormatter.Instance
-            | "S" -> ChainShortenedErrorFormatter.Instance
+            | null | "" -> ChainErrorFormatter.Instance
+            | "f" -> FinalMessageErrorFormatter.Instance
+            | "c" -> ChainMessageErrorFormatter.Instance
+            | "F" -> FinalErrorFormatter.Instance
+            | "S" -> ChainErrorFormatter.Instance
+            | "T" -> TraceErrorFormatter.Instance
             | _ -> raise (FormatException($"The {format} format string is not supported."))
         formatter.Format(err)
+
+    let formatFinalMessage (err: IError) : string =
+        (FinalMessageErrorFormatter.Instance :> IErrorFormatter).Format(err)
 
     let formatFinal (err: IError) : string =
         (FinalErrorFormatter.Instance :> IErrorFormatter).Format(err)
 
-    let formatFinalMultiline (err: IError) : string =
-        (FinalMultilineErrorFormatter.Instance :> IErrorFormatter).Format(err)
+    let formatChainMessage (err: IError) : string =
+        (ChainMessageErrorFormatter.Instance :> IErrorFormatter).Format(err)
 
     let formatChain (err: IError) : string =
         (ChainErrorFormatter.Instance :> IErrorFormatter).Format(err)
 
-    let formatChainShortened (err: IError) : string =
-        (ChainShortenedErrorFormatter.Instance :> IErrorFormatter).Format(err)
-
-    let formatChainMultiline (err: IError) : string =
-        (ChainMultilineErrorFormatter.Instance :> IErrorFormatter).Format(err)
+    let formatTrace (err: IError) : string =
+        (TraceErrorFormatter.Instance :> IErrorFormatter).Format(err)
