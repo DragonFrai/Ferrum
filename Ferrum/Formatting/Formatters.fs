@@ -21,10 +21,10 @@ module private SB =
     let [<Literal>] NoMessage = "<NoMessage>"
     let [<Literal>] Colon = ": "
     let [<Literal>] Error = "Error: "
-    let [<Literal>] CausedBy = "Cause: "
+    let [<Literal>] Cause = "Cause: "
 
-    let inline create () : StringBuilder =
-        StringBuilder()
+    let inline append (str: string) (sb: StringBuilder) : StringBuilder =
+        sb.Append(str)
 
     let inline appendLine (sb: StringBuilder) : StringBuilder =
         sb.AppendLine()
@@ -32,36 +32,25 @@ module private SB =
     let inline toString (sb: StringBuilder) : string =
         sb.ToString()
 
-    let inline notEmptyOrNoMessage (message: string) : string =
-        String.notEmptyOr NoMessage message
-
-    let inline appendColon (sb: StringBuilder) : StringBuilder =
-        sb.Append(Colon)
-
-    let inline appendFinalPrelude (sb: StringBuilder) : StringBuilder =
-        sb.Append(Error)
-
-    let inline appendChainPrelude (sb: StringBuilder) : StringBuilder =
-        sb.Append(CausedBy)
-
     let inline appendMessage (error: IError) (sb: StringBuilder) : StringBuilder =
-        sb.Append(notEmptyOrNoMessage error.Message)
-
-    let inline appendTraceWithPrelude
-            ([<InlineIfLambda>] prelude: StringBuilder -> StringBuilder)
-            (error: IError)
-            (sb: StringBuilder)
-            : StringBuilder =
-        let trace = Utils.stackTraceChecked error
-        match trace with
-        | null -> sb
-        | trace -> (prelude sb).Append(trace)
+        sb.Append(String.notEmptyOr NoMessage error.Message)
 
     let inline appendTrace (error: IError) (sb: StringBuilder) : StringBuilder =
         let trace = Utils.stackTraceChecked error
-        match trace with
-        | null -> sb
-        | trace -> sb.Append(trace)
+        if String.IsNullOrEmpty(trace) then
+            sb
+        else
+            let sb =
+                if trace.StartsWith("   at")
+                then sb
+                else sb.Append("   at ")
+            let sb =
+                sb.Append(trace)
+            let sb =
+                if trace.EndsWith(Environment.NewLine) || trace.EndsWith('\n') || trace.EndsWith('\r') || trace.EndsWith("\r\n")
+                then sb
+                else sb.AppendLine()
+            sb
 
     let inline appendChainWith<'s>
             ([<InlineIfLambda>] finalAppend: IError -> 's -> 's)
@@ -96,17 +85,17 @@ type FinalMessageErrorFormatter private () =
     static member Instance: FinalMessageErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
-            SB.notEmptyOrNoMessage error.Message
+            String.notEmptyOr SB.NoMessage error.Message
 
 type ChainMessageErrorFormatter private () =
     static let _instance = ChainMessageErrorFormatter()
     static member Instance: ChainMessageErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
-            SB.create ()
+            StringBuilder()
             |> SB.appendChain
                 (fun error sb -> sb |> SB.appendMessage error)
-                (fun error sb -> sb |> SB.appendColon |> SB.appendMessage error)
+                (fun error sb -> sb |> SB.append SB.Colon |> SB.appendMessage error)
                 error
             |> SB.toString
 
@@ -115,8 +104,8 @@ type FinalErrorFormatter private () =
     static member Instance: FinalErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
-            SB.create ()
-            |> SB.appendFinalPrelude
+            StringBuilder()
+            |> SB.append SB.Error
             |> SB.appendMessage error
             |> SB.appendLine
             |> SB.appendTrace error
@@ -127,16 +116,16 @@ type ChainErrorFormatter private () =
     static member Instance: ChainErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
-            SB.create ()
+            StringBuilder()
             |> SB.appendChainWith
                 (fun error sb ->
                     sb
-                    |> SB.appendFinalPrelude
+                    |> SB.append SB.Error
                     |> SB.appendMessage error
                     |> SB.appendLine)
                 (fun error sb ->
                     sb
-                    |> SB.appendChainPrelude
+                    |> SB.append SB.Cause
                     |> SB.appendMessage error
                     |> SB.appendLine)
                 (fun error sb ->
@@ -149,17 +138,17 @@ type TraceErrorFormatter private () =
     static member Instance: TraceErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
-            SB.create ()
+            StringBuilder()
             |> SB.appendChain
                 (fun error sb ->
                     sb
-                    |> SB.appendFinalPrelude
+                    |> SB.append SB.Error
                     |> SB.appendMessage error
                     |> SB.appendLine
                     |> SB.appendTrace error)
                 (fun error sb ->
                     sb
-                    |> SB.appendChainPrelude
+                    |> SB.append SB.Cause
                     |> SB.appendMessage error
                     |> SB.appendLine
                     |> SB.appendTrace error)
