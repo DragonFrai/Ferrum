@@ -27,28 +27,14 @@ type IError with
     member this.GetLocalStackTrace() : StackTrace voption =
         Error.localStackTrace this
 
-
     member this.ToException() : ErrorException =
         ErrorException(this)
 
     member this.Throw<'a>() : 'a =
         raise (ErrorException(this))
 
-
     member inline this.Format(formatter: IErrorFormatter) : string =
         Error.format formatter this
 
-    member inline this.FormatFinal() : string =
-        Error.formatFinalMessage this
-
-    member inline this.FormatChain() : string =
-        Error.formatChainMessage this
-
-    member inline this.FormatMultiline() : string =
-        Error.formatTrace this
-
-    member inline this.FormatMultilineTrace() : string =
-        Error.formatFinal this
-
-    member inline this.FormatMultilineTraceAll() : string =
-        Error.formatChain this
+    member inline this.Format(format: string) : string =
+        Error.formatBy format this

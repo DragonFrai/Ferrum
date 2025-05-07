@@ -106,18 +106,3 @@ module Error =
             | "T" -> TraceErrorFormatter.Instance
             | _ -> raise (FormatException($"The {format} format string is not supported."))
         formatter.Format(err)
-
-    let formatFinalMessage (err: IError) : string =
-        (FinalMessageErrorFormatter.Instance :> IErrorFormatter).Format(err)
-
-    let formatFinal (err: IError) : string =
-        (FinalErrorFormatter.Instance :> IErrorFormatter).Format(err)
-
-    let formatChainMessage (err: IError) : string =
-        (ChainMessageErrorFormatter.Instance :> IErrorFormatter).Format(err)
-
-    let formatChain (err: IError) : string =
-        (ChainErrorFormatter.Instance :> IErrorFormatter).Format(err)
-
-    let formatTrace (err: IError) : string =
-        (TraceErrorFormatter.Instance :> IErrorFormatter).Format(err)
