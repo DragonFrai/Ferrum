@@ -5,8 +5,8 @@ open System.Diagnostics
 
 type IError with
 
-    member inline this.Sources: IError seq =
-        Error.sources this
+    member inline this.InnerErrors: IError seq =
+        Error.innerErrors this
 
     member inline this.Context(context: string) : IError =
         ContextError(context, this)

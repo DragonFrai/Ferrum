@@ -49,7 +49,7 @@ module Error =
         | _ ->
             false
 
-    let sources (err: IError) : IError seq =
+    let innerErrors (err: IError) : IError seq =
         match err with
         | :? IAggregateError as err ->
             err.InnerErrors
