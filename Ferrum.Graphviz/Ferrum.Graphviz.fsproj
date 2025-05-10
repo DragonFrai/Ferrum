@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <PackageId>Ferrum</PackageId>
+        <PackageId>Ferrum.Graphviz</PackageId>
         <Version>0.2.0</Version>
-        <Description>F# dynamic error type library</Description>
+        <Description>Ferrum graphviz exporter</Description>
         <PackageTags>F# fsharp result error</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/DragonFrai/Ferrum</RepositoryUrl>
@@ -23,23 +23,11 @@
     <!--    -->
 
     <ItemGroup>
-        <Compile Include="Error.fs" />
-        <Compile Include="TracedError.fs" />
-        <Compile Include="AggregateError.fs" />
-        <Compile Include="Internal.fs" />
-        <Compile Include="Formatting\ErrorFormatter.fs" />
-        <Compile Include="Formatting\Formatters.fs" />
-        <Compile Include="Formatting\ErrorFormatterModule.fs" />
-        <Compile Include="Errors\MessageError.fs" />
-        <Compile Include="Errors\ContextError.fs" />
-        <Compile Include="Errors\WrappedError.fs" />
-        <Compile Include="Errors\AggregateError.fs" />
-        <Compile Include="Errors\DynamicError.fs" />
-        <Compile Include="ExceptionInterop.fs" />
-        <Compile Include="ErrorModule.fs" />
-        <Compile Include="ErrorExtensions.fs" />
-        <Compile Include="ResultModule.fs" />
+        <Compile Include="Library.fs"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Ferrum\Ferrum.fsproj" />
+    </ItemGroup>
 
 </Project>

@@ -12,7 +12,7 @@ let readFile (_fileName: string) : Result<string, IOError> =
     Error IOError.FileNotFound
 
 let makeGreeting () : Result<string, IError> =
-    let readNameResult = readFile "name.txt" |> Result.wrap |> Result.context "Name is unknown"
+    let readNameResult = readFile "name.txt" |> Result.boxError |> Result.context "Name is unknown"
     match readNameResult with
     | Error err -> Error err
     | Ok name -> Ok $"Hello, {name}"
@@ -27,5 +27,5 @@ let greet () : Result<unit, IError> =
 
 let run () =
     let res: Result<unit, IError> = greet ()
-    printfn $" > {Utils.formatResultChain res}"
+    printfn $" > {Utils.formatResult Error.formatS res}"
     // > Error (Greeting is not build: Name is unknown: FileNotFound)

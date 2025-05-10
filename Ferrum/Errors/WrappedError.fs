@@ -1,15 +1,21 @@
 namespace Ferrum
 
+open System
 open System.Diagnostics
 
 
 type WrappedError<'e>(error: 'e) =
 
-    override this.ToString() = $"{error}"
-
     interface IError with
-        member this.Reason = $"{error}"
-        member this.Source = ValueNone
+        member this.Message = $"{error}"
+        member this.InnerError = ValueNone
+
+    override this.ToString() =
+        ErrorFormatter.Default.Format(this)
+
+    interface IFormattable with
+        member this.ToString(format, _formatProvider) =
+            (ErrorFormatter.byFormat format).Format(this)
 
 
 type WrappedTracedError<'e>(error: 'e, stackTrace: StackTrace) =

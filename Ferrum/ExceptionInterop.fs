@@ -12,17 +12,15 @@ type ErrorException =
 
     new(error: IError) =
         let innerException: exn =
-            match error.Source with
+            match error.InnerError with
             | ValueNone -> null
             | ValueSome source -> ErrorException(source)
-        { inherit Exception(error.Reason, innerException)
+        { inherit Exception(error.Message, innerException)
           _error = error }
 
     member this.Error: IError = this._error
 
     override this.StackTrace = Utils.stackTraceChecked this.Error
-
-    override this.ToString(): string = this._error.Reason
 
 
 type ExceptionError =
@@ -43,7 +41,7 @@ type ExceptionError =
     override this.ToString() = this._exception.Message
 
     interface ITracedError with
-        member this.Reason = this._exception.Message
-        member this.Source = this._source
+        member this.Message = this._exception.Message
+        member this.InnerError = this._source
         member this.StackTrace = this._exception.StackTrace
         member this.LocalStackTrace = null

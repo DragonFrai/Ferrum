@@ -5,17 +5,7 @@ namespace Ferrum
 type IError =
 
     /// <summary> </summary>
-    /// <returns> Reason string or null </returns>
-    abstract Reason: string
+    /// <returns> Message string or null </returns>
+    abstract Message: string
 
-    abstract Source: IError voption
-
-
-[<RequireQualifiedAccess>]
-module Error =
-
-    let inline reason (err: IError) : string =
-        err.Reason
-
-    let inline source (err: IError) : IError voption =
-        err.Source
+    abstract InnerError: IError voption
