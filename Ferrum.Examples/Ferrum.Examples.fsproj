@@ -12,6 +12,8 @@
         <Compile Include="DynamicErrors.fs" />
         <Compile Include="GreetingFromFile.fs" />
         <Compile Include="ErrorFormatting.fs" />
+        <Compile Include="ExceptionConverting.fs" />
+        <Compile Include="GeneralWrapping.fs" />
         <Compile Include="Program.fs"/>
     </ItemGroup>
 

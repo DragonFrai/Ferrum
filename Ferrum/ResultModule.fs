@@ -37,6 +37,12 @@ module Result =
         | Ok x -> Ok x
         | Error err -> Error (Error.contextTraced (context ()) err)
 
+    let ofExnResult (result: Result<'a, exn>) : Result<'a, IError> =
+        Result.mapError Error.ofException result
+
+    let toExnResult (result: Result<'a, IError>) : Result<'a, exn> =
+        Result.mapError (fun err -> Error.toException err) result
+
     let boxError (result: Result<'a, 'e>) : Result<'a, IError> =
         match result with
         | Ok x -> Ok x

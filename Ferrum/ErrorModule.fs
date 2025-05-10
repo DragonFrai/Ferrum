@@ -118,6 +118,9 @@ module Error =
     let formatBy (format: string) (error: IError) : string =
         (ErrorFormatter.byFormat format).Format(error)
 
+    let formatL (level: int) (error: IError) : string =
+        (ErrorFormatter.byLevel level).Format(error)
+
     /// <summary>
     /// Format using <see cref="MessageErrorFormatter"/>. <br/>
     /// Example: <c> Final error </c>
@@ -167,10 +170,12 @@ module Error =
     let box (error: 'e) : IError =
         match Operators.box error with
         | :? IError as error -> error
+        | :? Exception as ex -> ofException ex
         | error -> WrappedError(error)
 
     [<StackTraceHidden>]
     let boxTraced (error: 'e) : IError =
         match Operators.box error with
         | :? IError as error -> error
+        | :? Exception as ex -> ofException ex
         | error -> WrappedTracedError(error)

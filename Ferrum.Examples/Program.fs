@@ -21,4 +21,14 @@ module Playground =
         do ErrorFormatting.run ()
         printfn "\n"
 
+        printfn "===== Exception converting     ====="
+        do ExceptionConverting.run ()
+        printfn "\n"
+
+        printfn "===== General boxing     ====="
+        do GeneralWrapping.run ()
+        printfn "\n"
+
+
+
         0
