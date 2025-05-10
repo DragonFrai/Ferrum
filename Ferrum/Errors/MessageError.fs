@@ -18,11 +18,11 @@ type MessageError(message: string) =
             (ErrorFormatter.byFormat format).Format(this)
 
 
-type MessageTracedError(reason: string, stackTrace: StackTrace) =
-    inherit MessageError(reason)
+type MessageTracedError(message: string, stackTrace: StackTrace) =
+    inherit MessageError(message)
 
     [<StackTraceHidden>]
-    new(reason: string) = MessageTracedError(reason, StackTrace(0, true))
+    new(message: string) = MessageTracedError(message, StackTrace(0, true))
 
     interface ITracedError with
         member this.StackTrace = stackTrace.ToString()

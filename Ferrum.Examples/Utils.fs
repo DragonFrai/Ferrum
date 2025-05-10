@@ -11,7 +11,7 @@ module Utils =
     //     | Ok x -> $"Ok (%A{x})"
     //     | Error err -> $"Error ({err.Format(ErrorFormatters.MultilineErrorFormatter.Instance)})"
 
-    let formatResultChain (result: Result<'a, IError>) : string =
+    let formatResult (errorFormatFunc: IError -> string) (result: Result<'a, IError>) : string =
         match result with
         | Ok x -> $"Ok (%A{x})"
-        | Error err -> $"Error ({err.Format(ChainMessageErrorFormatter.Instance)})"
+        | Error err -> $"Error ({errorFormatFunc err})"

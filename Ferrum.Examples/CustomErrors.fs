@@ -31,15 +31,15 @@ type ComplexError =
 let run () =
 
     let simpleError = SimpleError.SimpleCase
-    printfn $" > {simpleError.Format(ChainMessageErrorFormatter.Instance)}"
+    printfn $" > {simpleError |> Error.formatS}"
     // > Some simple error case
 
     let complexErrorSomeError = ComplexError.SomeError
-    printfn $" > {complexErrorSomeError.Format(ChainMessageErrorFormatter.Instance)}"
+    printfn $" > {complexErrorSomeError |> Error.formatS}"
     // > Some complex error case
 
     let complexErrorWithSource = ComplexError.Source SimpleError.SimpleCase
-    printfn $" > {complexErrorWithSource.Format(ChainMessageErrorFormatter.Instance)}"
+    printfn $" > {complexErrorWithSource |> Error.formatS}"
     // > Error caused by simple error source: Some simple error case
 
     ()

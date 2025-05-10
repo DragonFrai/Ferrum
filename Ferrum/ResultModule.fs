@@ -8,8 +8,12 @@ type Result<'a> = Result<'a, IError>
 [<RequireQualifiedAccess>]
 module Result =
 
-    let err (message: string) : Result<'a, IError> =
-        Error (Error.err message)
+    let failure (message: string) : Result<'a, IError> =
+        Error (Error.failure message)
+
+    [<StackTraceHidden>]
+    let failureTraced (message: string) : Result<'a, IError> =
+        Error (Error.failureTraced message)
 
     let context (context: string) (result: Result<'a, IError>) : Result<'a, IError> =
         match result with
@@ -33,16 +37,16 @@ module Result =
         | Ok x -> Ok x
         | Error err -> Error (Error.contextTraced (context ()) err)
 
-    let wrap (result: Result<'a, 'e>) : Result<'a, IError> =
+    let boxError (result: Result<'a, 'e>) : Result<'a, IError> =
         match result with
         | Ok x -> Ok x
-        | Error err -> Error (Error.wrap err)
+        | Error err -> Error (Error.box err)
 
     [<StackTraceHidden>]
-    let wrapTraced (result: Result<'a, 'e>) : Result<'a, IError> =
+    let boxErrorTraced (result: Result<'a, 'e>) : Result<'a, IError> =
         match result with
         | Ok x -> Ok x
-        | Error err -> Error (Error.wrapTraced err)
+        | Error err -> Error (Error.boxTraced err)
 
     let aggregate (message: string) (result: Result<'a, IError seq>) : Result<'a, IError> =
         match result with
@@ -56,7 +60,7 @@ module Result =
         | Error err -> Error (Error.aggregateTraced message err)
 
     let catchToError (f: unit -> 'a) : Result<'a, IError> =
-        try Ok(f ())
+        try Ok (f ())
         with ex -> Error (Error.ofException ex)
 
     let getOrRaiseError (result: Result<'a, IError>) : 'a =

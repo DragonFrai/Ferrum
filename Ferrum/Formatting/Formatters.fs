@@ -79,17 +79,16 @@ module private SB =
             : 's =
         appendChainWith finalAppend chainAppend (fun _e s -> s) error state
 
-
-type FinalMessageErrorFormatter private () =
-    static let _instance = FinalMessageErrorFormatter()
-    static member Instance: FinalMessageErrorFormatter = _instance
+type MessageErrorFormatter private () =
+    static let _instance = MessageErrorFormatter()
+    static member Instance: MessageErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
             String.notEmptyOr SB.NoMessage error.Message
 
-type ChainMessageErrorFormatter private () =
-    static let _instance = ChainMessageErrorFormatter()
-    static member Instance: ChainMessageErrorFormatter = _instance
+type SummaryErrorFormatter private () =
+    static let _instance = SummaryErrorFormatter()
+    static member Instance: SummaryErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
             StringBuilder()
@@ -99,21 +98,9 @@ type ChainMessageErrorFormatter private () =
                 error
             |> SB.toString
 
-type FinalErrorFormatter private () =
-    static let _instance = FinalErrorFormatter()
-    static member Instance: FinalErrorFormatter = _instance
-    interface IErrorFormatter with
-        member this.Format(error) =
-            StringBuilder()
-            |> SB.append SB.Error
-            |> SB.appendMessage error
-            |> SB.appendLine
-            |> SB.appendTrace error
-            |> SB.toString
-
-type ChainErrorFormatter private () =
-    static let _instance = ChainErrorFormatter()
-    static member Instance: ChainErrorFormatter = _instance
+type DetailedErrorFormatter private () =
+    static let _instance = DetailedErrorFormatter()
+    static member Instance: DetailedErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
             StringBuilder()
@@ -133,9 +120,9 @@ type ChainErrorFormatter private () =
                 error
             |> SB.toString
 
-type TraceErrorFormatter private () =
-    static let _instance = TraceErrorFormatter()
-    static member Instance: TraceErrorFormatter = _instance
+type DiagnosticErrorFormatter private () =
+    static let _instance = DiagnosticErrorFormatter()
+    static member Instance: DiagnosticErrorFormatter = _instance
     interface IErrorFormatter with
         member this.Format(error) =
             StringBuilder()

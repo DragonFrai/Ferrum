@@ -5,8 +5,8 @@ open Xunit
 open Ferrum
 
 
-let singleError = Error.err "Final"
-let chainError = Error.context "Final" <| (Error.context "Middle" <| Error.err "Root")
+let singleError = Error.failure "Final"
+let chainError = Error.context "Final" <| (Error.context "Middle" <| Error.failure "Root")
 let tracedSingleError: IError = DynamicError("Final", "   at final\n")
 let tracedChainError: IError =
     DynamicError(
@@ -37,40 +37,32 @@ let assertFormatByLines (formatter: IErrorFormatter) (error: IError) (testers: (
 
 
 [<Fact>]
-let ``FinalMessageErrorFormatter works`` () =
-    let fmt = FinalMessageErrorFormatter.Instance
+let ``MessageErrorFormatter works`` () =
+    let fmt = MessageErrorFormatter.Instance
     do assertFormat fmt singleError "Final"
     do assertFormat fmt chainError "Final"
     do assertFormat fmt tracedSingleError "Final"
     do assertFormat fmt tracedChainError "Final"
 
 [<Fact>]
-let ``ChainMessageErrorFormatter works`` () =
-    let fmt = ChainMessageErrorFormatter.Instance
+let ``SummaryErrorFormatter works`` () =
+    let fmt = SummaryErrorFormatter.Instance
     do assertFormat fmt singleError "Final"
     do assertFormat fmt chainError "Final: Middle: Root"
     do assertFormat fmt tracedSingleError "Final"
     do assertFormat fmt tracedChainError "Final: Middle: Root"
 
 [<Fact>]
-let ``FinalErrorFormatter works`` () =
-    let fmt = FinalErrorFormatter.Instance
-    do assertFormat fmt singleError "Error: Final\n"
-    do assertFormat fmt chainError "Error: Final\n"
-    do assertFormat fmt tracedSingleError "Error: Final\n   at final\n"
-    do assertFormat fmt tracedChainError "Error: Final\n   at final\n"
-
-[<Fact>]
-let ``ChainErrorFormatter works`` () =
-    let fmt = ChainErrorFormatter.Instance
+let ``DetailedErrorFormatter works`` () =
+    let fmt = DetailedErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
     do assertFormat fmt chainError "Error: Final\nCause: Middle\nCause: Root\n"
     do assertFormat fmt tracedSingleError "Error: Final\n   at final\n"
     do assertFormat fmt tracedChainError "Error: Final\nCause: Middle\nCause: Root\n   at root\n"
 
 [<Fact>]
-let ``TraceErrorFormatter works`` () =
-    let fmt = TraceErrorFormatter.Instance
+let ``DiagnosticErrorFormatter works`` () =
+    let fmt = DiagnosticErrorFormatter.Instance
     do assertFormat fmt singleError "Error: Final\n"
     do assertFormat fmt chainError "Error: Final\nCause: Middle\nCause: Root\n"
     do assertFormat fmt tracedSingleError "Error: Final\n   at final\n"
