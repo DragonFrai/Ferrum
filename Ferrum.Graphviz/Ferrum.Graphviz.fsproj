@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <PackageId>Ferrum.Graphviz</PackageId>
-        <Version>0.2.0</Version>
+        <Version>0.3.0</Version>
         <Description>Ferrum graphviz exporter</Description>
         <PackageTags>F# fsharp result error</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

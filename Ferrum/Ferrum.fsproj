@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <PackageId>Ferrum</PackageId>
-        <Version>0.2.0</Version>
+        <Version>0.3.0</Version>
         <Description>F# dynamic error type library</Description>
         <PackageTags>F# fsharp result error</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
