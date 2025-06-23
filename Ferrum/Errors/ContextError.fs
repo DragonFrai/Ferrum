@@ -5,10 +5,12 @@ open System.Diagnostics
 
 
 type ContextError(context: string, innerError: IError) =
+    
+    do if innerError = null then invalidArg "innerError" "Error is null"
 
     interface IError with
         member this.Message = context
-        member this.InnerError = ValueSome innerError
+        member this.InnerError = innerError
 
     override this.ToString() =
         ErrorFormatter.Default.Format(this)

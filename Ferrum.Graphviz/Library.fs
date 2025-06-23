@@ -72,8 +72,8 @@ type GraphvizErrorFormatter private () =
                     err.InnerErrors
                 | err ->
                     match err.InnerError with
-                    | ValueSome err -> Seq.singleton err
-                    | ValueNone -> Seq.empty
+                    | null -> Seq.empty
+                    | err -> Seq.singleton err
             error |> GraphvizUtils.formatTree (fun e -> e.Message) getErrorSources
 
 

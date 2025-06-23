@@ -8,6 +8,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.Tests", "Ferrum.Test
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.Graphviz", "Ferrum.Graphviz\Ferrum.Graphviz.fsproj", "{FF8BD6A5-FC65-48C0-B785-9C6FC413FA62}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ferrum.Abstractions", "Ferrum.Abstractions\Ferrum.Abstractions.csproj", "{4633FE8D-3FE1-4D69-92E9-CA310EE98645}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{FF8BD6A5-FC65-48C0-B785-9C6FC413FA62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF8BD6A5-FC65-48C0-B785-9C6FC413FA62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF8BD6A5-FC65-48C0-B785-9C6FC413FA62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4633FE8D-3FE1-4D69-92E9-CA310EE98645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4633FE8D-3FE1-4D69-92E9-CA310EE98645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4633FE8D-3FE1-4D69-92E9-CA310EE98645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4633FE8D-3FE1-4D69-92E9-CA310EE98645}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

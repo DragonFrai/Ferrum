@@ -22,11 +22,7 @@
     <!--    -->
 
     <ItemGroup>
-        <Compile Include="Error.fs" />
-        <Compile Include="TracedError.fs" />
-        <Compile Include="AggregateError.fs" />
         <Compile Include="Internal.fs" />
-        <Compile Include="Formatting\ErrorFormatter.fs" />
         <Compile Include="Formatting\Formatters.fs" />
         <Compile Include="Formatting\ErrorFormatterModule.fs" />
         <Compile Include="Errors\MessageError.fs" />
@@ -38,6 +34,10 @@
         <Compile Include="ErrorModule.fs" />
         <Compile Include="ErrorExtensions.fs" />
         <Compile Include="ResultModule.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Ferrum.Abstractions\Ferrum.Abstractions.csproj" />
     </ItemGroup>
 
 

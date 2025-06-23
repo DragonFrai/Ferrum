@@ -8,7 +8,7 @@ type WrappedError<'e>(error: 'e) =
 
     interface IError with
         member this.Message = $"{error}"
-        member this.InnerError = ValueNone
+        member this.InnerError = null
 
     override this.ToString() =
         ErrorFormatter.Default.Format(this)

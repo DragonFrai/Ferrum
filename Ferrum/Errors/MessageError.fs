@@ -8,7 +8,7 @@ type MessageError(message: string) =
 
     interface IError with
         member this.Message = message
-        member this.InnerError = ValueNone
+        member this.InnerError = null
 
     override this.ToString() =
         ErrorFormatter.Default.Format(this)

@@ -13,7 +13,7 @@ type AggregateError(message: string, errors: IError seq) =
             message
 
         member this.InnerError =
-            Utils.tryFirst errors
+            Utils.tryFirst errors |> ValueOption.toObj
 
     interface IAggregateError with
         member this.IsAggregate =

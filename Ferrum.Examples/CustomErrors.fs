@@ -12,7 +12,7 @@ type SimpleError =
                 match this with
                 | SimpleCase -> "Some simple error case"
             member this.InnerError =
-                ValueNone
+                null
 
 type ComplexError =
     | Source of SimpleError
@@ -25,8 +25,8 @@ type ComplexError =
                 | SomeError -> "Some complex error case"
             member this.InnerError =
                 match this with
-                | Source simpleError -> ValueSome simpleError
-                | SomeError -> ValueNone
+                | Source simpleError -> simpleError
+                | SomeError -> null
 
 let run () =
 

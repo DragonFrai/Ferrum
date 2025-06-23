@@ -13,8 +13,8 @@ type ErrorException =
     new(error: IError) =
         let innerException: exn =
             match error.InnerError with
-            | ValueNone -> null
-            | ValueSome source -> ErrorException(source)
+            | null -> null
+            | source -> ErrorException(source)
         { inherit Exception(error.Message, innerException)
           _error = error }
 
@@ -25,14 +25,14 @@ type ErrorException =
 
 type ExceptionError =
 
-    val private _source: IError voption
+    val private _source: IError
     val private _exception: exn
 
     new(exception': exn) =
         let sourceExn =
             match exception'.InnerException with
-            | null -> ValueNone
-            | inner -> ValueSome(ExceptionError(inner) :> IError)
+            | null -> null
+            | inner -> ExceptionError(inner) :> IError
         { _exception = exception'
           _source = sourceExn }
 

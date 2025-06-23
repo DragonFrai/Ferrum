@@ -12,7 +12,7 @@ module Error =
         err.Message
 
     let innerError (err: IError) : IError option =
-        err.InnerError |> Utils.ValueOption.toOption
+        err.InnerError |> Option.ofObj
 
     let inline failure (message: string) : IError =
         MessageError(message)
@@ -60,26 +60,26 @@ module Error =
             err.InnerErrors
         | err ->
             match err.InnerError with
-            | ValueNone -> Seq.empty
-            | ValueSome source -> Seq.singleton source
+            | null -> Seq.empty
+            | source -> Seq.singleton source
 
     let chain (err: IError) : IError seq =
         seq {
-            let rec loop (current: IError voption) = seq {
+            let rec loop (current: IError) = seq {
                 match current with
-                | ValueNone -> ()
-                | ValueSome err ->
+                | null -> ()
+                | err ->
                     yield err
                     yield! loop err.InnerError
             }
-            yield! loop (ValueSome err)
+            yield! loop err
         }
 
     let getRoot (err: IError) : IError =
         let rec loop (current: IError) =
             match current.InnerError with
-            | ValueNone -> current
-            | ValueSome err -> loop err
+            | null -> current
+            | err -> loop err
         loop err
 
     let stackTrace (error: IError) : string option =

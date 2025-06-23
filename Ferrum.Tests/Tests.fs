@@ -9,7 +9,7 @@ let ``MessageError works`` () =
     let test (f: string -> IError) : unit =
         let err = f "msg error"
         Assert.Equal("msg error", err.Message)
-        Assert.Equal(ValueNone, err.InnerError)
+        Assert.Equal(null, err.InnerError)
     do test (fun msg -> MessageError(msg))
     do test Error.failure
     do test (fun msg -> Result.failure msg |> Result.getError)
@@ -22,7 +22,7 @@ let ``WrappedError works`` () =
         let errorToWrap = ErrorToWrap
         let err = f errorToWrap
         Assert.Equal(errorToWrap.ToString(), err.Message)
-        Assert.Equal(ValueNone, err.InnerError)
+        Assert.Equal(null, err.InnerError)
     do test (fun err -> WrappedError(err))
     do test Error.box
     do test (fun err -> Result.boxError (Error err) |> Result.getError)
@@ -33,7 +33,7 @@ let ``ContextError works`` () =
         let rootError = Error.failure "RootError"
         let err = f "Context" rootError
         Assert.Equal("Context", err.Message)
-        Assert.Equal(ValueSome rootError, err.InnerError)
+        Assert.Equal(rootError, err.InnerError)
     do test (fun ctx err -> ContextError(ctx, err))
     do test Error.context
     do test (fun ctx err -> Result.context ctx (Error err) |> Result.getError)

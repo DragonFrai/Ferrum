@@ -63,8 +63,8 @@ module private SB =
         do state <- finalAppend error state
         let mutable error = error
         let mutable innerError = error.InnerError
-        while innerError.IsSome do
-            let innerErrorValue = innerError.Value
+        while innerError <> null do
+            let innerErrorValue = innerError
             state <- chainAppend innerErrorValue state
             error <- innerErrorValue
             innerError <- innerErrorValue.InnerError

@@ -8,38 +8,38 @@ open Ferrum.Internal
 
 type DynamicError =
     val private message: string
-    val private innerError: IError voption
+    val private innerError: IError
     val private innerErrors: IError seq
     val private isAggregate: bool
     val private trace: string
     val private localTrace: StackTrace
 
     new(message: string) =
-        { message = message; innerError = ValueNone; innerErrors = Seq.empty; isAggregate = false; trace = null; localTrace = null }
+        { message = message; innerError = null; innerErrors = Seq.empty; isAggregate = false; trace = null; localTrace = null }
 
     new(message: string, source: IError) =
-        { message = message; innerError = ValueSome source; innerErrors = Seq.singleton source; isAggregate = false; trace = null; localTrace = null }
+        { message = message; innerError = source; innerErrors = Seq.singleton source; isAggregate = false; trace = null; localTrace = null }
 
     new(message: string, sources: IError seq) =
-        { message = message; innerError = Utils.tryFirst sources; innerErrors = sources; isAggregate = true; trace = null; localTrace = null }
+        { message = message; innerError = Utils.tryFirst sources |> ValueOption.toObj; innerErrors = sources; isAggregate = true; trace = null; localTrace = null }
 
     new(message: string, trace: string) =
-        { message = message; innerError = ValueNone; innerErrors = Seq.empty; isAggregate = false; trace = trace; localTrace = null }
+        { message = message; innerError = null; innerErrors = Seq.empty; isAggregate = false; trace = trace; localTrace = null }
 
     new(message: string, source: IError, trace: string) =
-        { message = message; innerError = ValueSome source; innerErrors = Seq.singleton source; isAggregate = false; trace = trace; localTrace = null }
+        { message = message; innerError = source; innerErrors = Seq.singleton source; isAggregate = false; trace = trace; localTrace = null }
 
     new(message: string, sources: IError seq, trace: string) =
-        { message = message; innerError = Utils.tryFirst sources; innerErrors = sources; isAggregate = true; trace = trace; localTrace = null }
+        { message = message; innerError = Utils.tryFirst sources |> ValueOption.toObj; innerErrors = sources; isAggregate = true; trace = trace; localTrace = null }
 
     new(message: string, localTrace: StackTrace) =
-        { message = message; innerError = ValueNone; innerErrors = Seq.empty; isAggregate = false; trace = localTrace.ToString(); localTrace = localTrace }
+        { message = message; innerError = null; innerErrors = Seq.empty; isAggregate = false; trace = localTrace.ToString(); localTrace = localTrace }
 
     new(message: string, source: IError, localTrace: StackTrace) =
-        { message = message; innerError = ValueSome source; innerErrors = Seq.singleton source; isAggregate = false; trace = localTrace.ToString(); localTrace = localTrace }
+        { message = message; innerError = source; innerErrors = Seq.singleton source; isAggregate = false; trace = localTrace.ToString(); localTrace = localTrace }
 
     new(message: string, sources: IError seq, localTrace: StackTrace) =
-        { message = message; innerError = Utils.tryFirst sources; innerErrors = sources; isAggregate = true; trace = localTrace.ToString(); localTrace = localTrace }
+        { message = message; innerError = Utils.tryFirst sources |> ValueOption.toObj; innerErrors = sources; isAggregate = true; trace = localTrace.ToString(); localTrace = localTrace }
 
     interface IError with
         member this.Message = this.message
