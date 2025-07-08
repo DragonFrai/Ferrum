@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <PackageId>Ferrum</PackageId>
+        <PackageId>Ferrum.FSharp</PackageId>
         <Version>0.3.0</Version>
         <Description>F# dynamic error type library</Description>
         <PackageTags>F# fsharp result error</PackageTags>
@@ -29,7 +29,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Ferrum.Abstractions\Ferrum.Abstractions.csproj" />
-      <ProjectReference Include="..\Ferrum.Core\Ferrum.Core.csproj" />
+      <ProjectReference Include="..\Ferrum\Ferrum.csproj" />
     </ItemGroup>
 
 

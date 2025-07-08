@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum", "Ferrum\Ferrum.fsproj", "{E8750601-2231-4BFE-B7DF-BE365755A174}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.FSharp", "Ferrum.FSharp\Ferrum.FSharp.fsproj", "{E8750601-2231-4BFE-B7DF-BE365755A174}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.Examples", "Ferrum.Examples\Ferrum.Examples.fsproj", "{2B70DC73-6B84-407A-85F7-6DD416D7CAB1}"
 EndProject
@@ -10,7 +10,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.Graphviz", "Ferrum.G
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ferrum.Abstractions", "Ferrum.Abstractions\Ferrum.Abstractions.csproj", "{4633FE8D-3FE1-4D69-92E9-CA310EE98645}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ferrum.Core", "Ferrum.Core\Ferrum.Core.csproj", "{D88954A6-1791-4D56-B5A6-E847DE1AE3C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ferrum", "Ferrum\Ferrum.csproj", "{D88954A6-1791-4D56-B5A6-E847DE1AE3C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

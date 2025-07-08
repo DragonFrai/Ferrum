@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Ferrum\Ferrum.fsproj" />
+      <ProjectReference Include="..\Ferrum.FSharp\Ferrum.FSharp.fsproj" />
     </ItemGroup>
 
 </Project>
