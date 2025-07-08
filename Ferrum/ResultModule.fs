@@ -1,7 +1,7 @@
 namespace Ferrum
 
 open System.Diagnostics
-
+open FSharp.Core
 
 type Result<'a> = Result<'a, IError>
 

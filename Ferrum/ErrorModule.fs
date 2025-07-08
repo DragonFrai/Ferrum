@@ -1,8 +1,10 @@
 namespace Ferrum
 
-open System
 open System.Diagnostics
-open Ferrum.Internal
+
+open Ferrum.ExceptionInterop
+open Ferrum.Formatting
+open FSharp.Core
 
 
 [<RequireQualifiedAccess>]
@@ -15,32 +17,28 @@ module Error =
         err.InnerError |> Option.ofObj
 
     let inline failure (message: string) : IError =
-        MessageError(message)
+        Error.Failure(message)
 
     [<StackTraceHidden>]
     let inline failureTraced (message: string) : IError =
-        MessageTracedError(message)
+        failwith "todo"
 
-    let inline context (context: string) (source: IError) : IError =
-        ContextError(context, source)
+    let inline context (message: string) (source: IError) : IError =
+        source.Context(message)
 
     [<StackTraceHidden>]
     let inline contextTraced (context: string) (source: IError) : IError =
-        ContextTracedError(context, source)
+        failwith "todo"
 
-    let inline aggregate (message: string) (errors: IError seq) : AggregateError =
-        AggregateError(message, errors)
+    let inline aggregate (message: string) (errors: IError seq) : IError =
+        Error.Aggregate(message)
 
     [<StackTraceHidden>]
-    let inline aggregateTraced (message: string) (errors: IError seq) : AggregateError =
-        AggregateTracedError(message, errors)
+    let inline aggregateTraced (message: string) (errors: IError seq) : IError =
+        failwith "todo"
 
-    let isAggregate (err: IError) : bool =
-        match err with
-        | :? IAggregateError as err ->
-            err.IsAggregate
-        | _ ->
-            false
+    let inline isAggregate (err: IError) : bool =
+        err.GetIsAggregate()
 
     /// <summary>
     /// Returns all inner errors.
@@ -54,39 +52,20 @@ module Error =
     /// Error.aggregate "Agg" [ Error.failure "Err1"; Error.failure "Err2" ]
     /// |> Error.innerErrors // = [ Error.failure "Err1"; Error.failure "Err2" ] <br/>
     /// </example>
-    let innerErrors (error: IError) : IError seq =
-        match error with
-        | :? IAggregateError as err ->
-            err.InnerErrors
-        | err ->
-            match err.InnerError with
-            | null -> Seq.empty
-            | source -> Seq.singleton source
+    let inline innerErrors (error: IError) : IError seq =
+        error.GetInnerErrors()
 
-    let chain (err: IError) : IError seq =
-        seq {
-            let rec loop (current: IError) = seq {
-                match current with
-                | null -> ()
-                | err ->
-                    yield err
-                    yield! loop err.InnerError
-            }
-            yield! loop err
-        }
+    let inline chain (error: IError) : IError seq =
+        error.Chain()
 
-    let getRoot (err: IError) : IError =
-        let rec loop (current: IError) =
-            match current.InnerError with
-            | null -> current
-            | err -> loop err
-        loop err
+    let inline getRoot (error: IError) : IError =
+        error.GetRoot()
 
     let stackTrace (error: IError) : string option =
-        Utils.stackTraceChecked error |> Option.ofObj
+        error.GetStackTrace() |> Option.ofObj
 
     let localStackTrace (error: IError) : StackTrace option =
-        Utils.localStackTraceChecked error |> Option.ofObj
+        error.GetLocalStackTrace() |> Option.ofObj
 
     let ofException (ex: exn) : IError =
         ExceptionError(ex)
@@ -95,15 +74,16 @@ module Error =
         ErrorException(err)
 
     let raise<'a> (err: IError) : 'a =
-        raise (ErrorException(err))
+        do err.Throw()
+        Unchecked.defaultof<'a>
 
     /// <summary>
     /// Format error using formatter
     /// </summary>
     /// <param name="formatter"></param>
     /// <param name="error"></param>
-    let format (formatter: IErrorFormatter) (error: IError) : string =
-        formatter.Format(error)
+    let inline format (formatter: IErrorFormatter) (error: IError) : string =
+        error.Format(formatter)
 
     /// <summary>
     /// Format error using passed format string (using base error formatters). <br/>
@@ -115,27 +95,27 @@ module Error =
     /// </summary>
     /// <param name="format"></param>
     /// <param name="error"></param>
-    let formatBy (format: string) (error: IError) : string =
-        (ErrorFormatter.byFormat format).Format(error)
+    let inline formatBy (format: string) (error: IError) : string =
+        error.Format(format)
 
-    let formatL (level: int) (error: IError) : string =
-        (ErrorFormatter.byLevel level).Format(error)
+    let inline formatL (level: int) (error: IError) : string =
+        error.Format(level)
 
     /// <summary>
     /// Format using <see cref="MessageErrorFormatter"/>. <br/>
     /// Example: <c> Final error </c>
     /// </summary>
     /// <param name="error"></param>
-    let formatM (error: IError) : string =
-        formatBy "m" error
+    let inline formatM (error: IError) : string =
+        error.FormatM()
 
     /// <summary>
     /// Format using <see cref="SummaryErrorFormatter"/>. <br/>
     /// Example: <c> Final error: Middle error: Root error </c>
     /// </summary>
     /// <param name="error"></param>
-    let formatS (error: IError) : string =
-        formatBy "s" error
+    let inline formatS (error: IError) : string =
+        error.FormatS()
 
     /// <summary>
     /// Format using <see cref="DetailedErrorFormatter"/>. <br/>
@@ -148,8 +128,8 @@ module Error =
     /// </code>
     /// </summary>
     /// <param name="error"></param>
-    let formatD (error: IError) : string =
-        formatBy "d" error
+    let inline formatD (error: IError) : string =
+        error.FormatD()
 
     /// <summary>
     /// Format using <see cref="DiagnosticErrorFormatter"/>. <br/>
@@ -164,18 +144,16 @@ module Error =
     /// </code>
     /// </summary>
     /// <param name="error"></param>
-    let formatX (error: IError) : string =
-        formatBy "x" error
+    let inline formatX (error: IError) : string =
+        error.FormatX()
 
-    let box (error: 'e) : IError =
-        match Operators.box error with
-        | :? IError as error -> error
-        | :? Exception as ex -> ofException ex
-        | error -> WrappedError(error)
+    let inline box (error: 'e) : IError =
+        Error.Wrap(error)
 
     [<StackTraceHidden>]
-    let boxTraced (error: 'e) : IError =
-        match Operators.box error with
-        | :? IError as error -> error
-        | :? Exception as ex -> ofException ex
-        | error -> WrappedTracedError(error)
+    let inline boxTraced (error: 'e) : IError =
+        Error.WrapTraced(error)
+
+[<AutoOpen>]
+module ErrorOverride =
+    let Error = Error

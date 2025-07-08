@@ -23,21 +23,13 @@
 
     <ItemGroup>
         <Compile Include="Internal.fs" />
-        <Compile Include="Formatting\Formatters.fs" />
-        <Compile Include="Formatting\ErrorFormatterModule.fs" />
-        <Compile Include="Errors\MessageError.fs" />
-        <Compile Include="Errors\ContextError.fs" />
-        <Compile Include="Errors\WrappedError.fs" />
-        <Compile Include="Errors\AggregateError.fs" />
-        <Compile Include="Errors\DynamicError.fs" />
-        <Compile Include="ExceptionInterop.fs" />
         <Compile Include="ErrorModule.fs" />
-        <Compile Include="ErrorExtensions.fs" />
         <Compile Include="ResultModule.fs" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Ferrum.Abstractions\Ferrum.Abstractions.csproj" />
+      <ProjectReference Include="..\Ferrum.Core\Ferrum.Core.csproj" />
     </ItemGroup>
 
 

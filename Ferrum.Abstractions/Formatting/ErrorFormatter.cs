@@ -1,4 +1,4 @@
-namespace Ferrum;
+namespace Ferrum.Formatting;
 
 
 public interface IErrorFormatter
