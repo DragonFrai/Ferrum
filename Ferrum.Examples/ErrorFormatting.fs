@@ -2,6 +2,8 @@
 module Ferrum.Examples.ErrorFormatting
 
 open Ferrum
+open Ferrum.FSharp
+open Ferrum.Formatting.Formatters
 
 
 

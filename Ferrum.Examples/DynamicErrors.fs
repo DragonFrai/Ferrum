@@ -2,6 +2,7 @@
 module Ferrum.Examples.DynamicErrors
 
 open Ferrum
+open Ferrum.FSharp
 
 
 type SomeError = SomeError

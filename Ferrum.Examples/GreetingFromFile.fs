@@ -2,6 +2,7 @@
 module Ferrum.Examples.GreetingFromFile
 
 open Ferrum
+open Ferrum.FSharp
 
 
 [<RequireQualifiedAccess>]

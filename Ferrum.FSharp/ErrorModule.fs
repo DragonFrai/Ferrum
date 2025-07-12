@@ -1,41 +1,48 @@
-namespace Ferrum
+namespace Ferrum.FSharp
 
+open System
+open System.Collections.Generic
 open System.Diagnostics
 
+open FSharp.Core
+open Ferrum
+open Ferrum.Errors
 open Ferrum.ExceptionInterop
 open Ferrum.Formatting
-open FSharp.Core
 
 
 [<RequireQualifiedAccess>]
 module Error =
 
-    let inline message (err: IError) : string =
-        err.Message
+    let message (err: IError) : string =
+        match err.Message with null -> String.Empty | msg -> msg
 
     let innerError (err: IError) : IError option =
         err.InnerError |> Option.ofObj
 
     let inline failure (message: string) : IError =
-        Error.Failure(message)
+        MessageError(message)
 
     [<StackTraceHidden>]
     let inline failureTraced (message: string) : IError =
-        failwith "todo"
+        TracedMessageError(message)
 
     let inline context (message: string) (source: IError) : IError =
-        source.Context(message)
+        ContextError(message, source)
 
     [<StackTraceHidden>]
-    let inline contextTraced (context: string) (source: IError) : IError =
-        failwith "todo"
+    let inline contextTraced (message: string) (innerError: IError) : IError =
+        TracedContextError(message, innerError)
 
     let inline aggregate (message: string) (errors: IError seq) : IError =
-        Error.Aggregate(message)
+        AggregateError(message, errors)
+
+    let aggregateNoClone (message: string) (innerErrors: IReadOnlyList<IError>) : IError =
+        AggregateError(message, innerErrors, false)
 
     [<StackTraceHidden>]
-    let inline aggregateTraced (message: string) (errors: IError seq) : IError =
-        failwith "todo"
+    let inline aggregateTraced (message: string) (innerErrors: IError seq) : IError =
+        TracedAggregateError(message, innerErrors)
 
     let inline isAggregate (err: IError) : bool =
         err.GetIsAggregate()
@@ -148,12 +155,15 @@ module Error =
         error.FormatX()
 
     let inline box (error: 'e) : IError =
-        Error.Wrap(error)
+        ObjectError(error)
+
+    let inline boxWith (toString: 'e -> string) (error: 'e) : IError =
+        ObjectError(error, toString)
 
     [<StackTraceHidden>]
     let inline boxTraced (error: 'e) : IError =
-        Error.WrapTraced(error)
+        TracedObjectError(error)
 
-[<AutoOpen>]
-module ErrorOverride =
-    let Error = Error
+    [<StackTraceHidden>]
+    let inline boxWithTraced (toString: 'e -> string) (error: 'e) : IError =
+        TracedObjectError(error, toString)

@@ -2,6 +2,7 @@
 module Ferrum.Examples.GeneralWrapping
 
 open Ferrum
+open Ferrum.FSharp
 
 
 type MyError = | MyError

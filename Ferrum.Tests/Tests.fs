@@ -2,7 +2,10 @@ module Ferrum.Tests.Tests
 
 open Xunit
 open Ferrum
+open Ferrum.Errors
+open Ferrum.FSharp
 open Ferrum.Tests.Utils
+
 
 [<Fact>]
 let ``MessageError works`` () =
@@ -17,13 +20,13 @@ let ``MessageError works`` () =
 type ErrorToWrap = ErrorToWrap
 
 [<Fact>]
-let ``WrappedError works`` () =
+let ``ObjectError works`` () =
     let test (f: ErrorToWrap -> IError) : unit =
         let errorToWrap = ErrorToWrap
         let err = f errorToWrap
         Assert.Equal(errorToWrap.ToString(), err.Message)
         Assert.Equal(null, err.InnerError)
-    do test (fun err -> WrappedError(err))
+    do test (fun err -> ObjectError(err))
     do test Error.box
     do test (fun err -> Result.boxError (Error err) |> Result.getError)
 
@@ -62,7 +65,7 @@ let ``Error get root works`` () =
 let rec ``AggregateError with single aggregated error works`` () =
     let errors = [| Error.failure "err1" |]
     let agg = Error.aggregate "agg" errors
-    let errors' = agg.InnerErrors |> Seq.toArray
+    let errors' = agg.GetInnerErrors() |> Seq.toArray
     Assert.Equal("agg", Error.message agg)
     Assert.Equal(Some (errors[0]), Error.innerError agg)
     Assert.Equal<IError>(errors, errors')
@@ -71,14 +74,14 @@ let rec ``AggregateError with single aggregated error works`` () =
 let rec ``AggregateError contains original error sequence in original order`` () =
     let errors = [| "err1"; "err2"; |] |> Array.map Error.failure
     let agg = Error.aggregate "agg" errors
-    let errors' = agg.InnerErrors |> Seq.toArray
+    let errors' = agg.GetInnerErrors() |> Seq.toArray
     Assert.Equal<IError>(errors, errors')
 
 [<Fact>]
 let rec ``AggregateError with empty errors suitable`` () =
     let errors = [| |]
     let agg = Error.aggregate "agg" errors
-    Assert.True(agg.InnerErrors |> Seq.isEmpty)
+    Assert.True(agg.GetInnerErrors() |> Seq.isEmpty)
     Assert.Equal(None, Error.innerError agg)
 
 [<Fact>]

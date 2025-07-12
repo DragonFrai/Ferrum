@@ -3,6 +3,6 @@
 
 public interface IError
 {
-    string Message { get; }
-    IError? InnerError { get; }
+    public string Message { get; }
+    public IError? InnerError { get; }
 }

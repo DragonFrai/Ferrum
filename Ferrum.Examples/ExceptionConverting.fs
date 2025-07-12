@@ -2,6 +2,7 @@
 module Ferrum.Examples.ExceptionConverting
 
 open Ferrum
+open Ferrum.FSharp
 
 
 let run () =

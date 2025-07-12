@@ -1,9 +1,7 @@
-namespace Ferrum
+namespace Ferrum.FSharp
 
 open System.Diagnostics
 open FSharp.Core
-
-type Result<'a> = Result<'a, IError>
 
 [<RequireQualifiedAccess>]
 module Result =

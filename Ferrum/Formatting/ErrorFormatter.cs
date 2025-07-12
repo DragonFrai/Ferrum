@@ -10,6 +10,7 @@ public static class ErrorFormatter
     {
         return format switch
         {
+            null or "" or "G" => Default,
             "m" or "M" or "l1" or "L1" => MessageErrorFormatter.Instance,
             "s" or "S" or "l2" or "L2" => SummaryErrorFormatter.Instance,
             "d" or "D" or "l3" or "L3" => DetailedErrorFormatter.Instance,

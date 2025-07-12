@@ -19,3 +19,4 @@ public class ErrorException : Exception
     // TODO: Override stack trace or not? Flag-based resolve behaviour?
     // public override string? StackTrace => _error.GetStackTrace();
 }
+

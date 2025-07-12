@@ -22,7 +22,7 @@
     <!--    -->
 
     <ItemGroup>
-        <Compile Include="Internal.fs" />
+        <Compile Include="Types.fs" />
         <Compile Include="ErrorModule.fs" />
         <Compile Include="ResultModule.fs" />
     </ItemGroup>

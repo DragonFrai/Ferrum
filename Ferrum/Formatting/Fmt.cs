@@ -16,7 +16,7 @@ internal static class Fmt
     public static string MessageOrDefault(IError error)
     {
         var msg = error.Message;
-        return string.IsNullOrEmpty(msg) ? msg : NoMessage;
+        return string.IsNullOrEmpty(msg) ? NoMessage : msg;
     }
 
     public static TState FoldChainWith<TState>(

@@ -1,38 +1,64 @@
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Ferrum.Formatting;
 
 namespace Ferrum.Errors;
 
-public class AggregateError(string message, IEnumerable<IError> innerErrors) : IError, IAggregateError, IFormattable
+
+public class AggregateError : BaseError, IAggregateError
 {
+    private readonly string _message;
+    private readonly IReadOnlyCollection<IError> _innerErrors;
 
-    public string Message => message;
+    private static ArgumentNullException ErrorIsNull(string argName, int index)
+    {
+        return new ArgumentNullException($"{argName}[{index}]");
+    }
 
-    public IError? InnerError => null;
+    public AggregateError(string message, IReadOnlyList<IError> innerErrors, bool cloneInnerErrors = true)
+    {
+        ArgumentNullException.ThrowIfNull(innerErrors, nameof(innerErrors));
+        var count = innerErrors.Count;
+        IReadOnlyCollection<IError> innerErrorsCollection;
+        if (cloneInnerErrors)
+        {
+            var innerErrorsArray = new IError[count];
+            for (var i = 0; i < count; i++)
+            {
+                var error = innerErrors[i];
+                innerErrorsArray[i] = error ?? throw ErrorIsNull(nameof(innerErrors), i);
+            }
+            innerErrorsCollection = innerErrorsArray;
+        }
+        else
+        {
+            for (var i = 0; i < count; i++)
+            {
+                var error = innerErrors[i];
+                if (error is null)
+                {
+                    throw ErrorIsNull(nameof(innerErrors), i);
+                }
+            }
+            innerErrorsCollection = innerErrors;
+        }
+
+        _innerErrors = innerErrorsCollection;
+        _message = message;
+    }
+
+    public AggregateError(string message, IEnumerable<IError> innerErrors)
+        : this(message, innerErrors.ToArray(), false) { }
+
+    public AggregateError(string message)
+        : this(message, [], false) { }
+
+    public AggregateError()
+        : this("Aggregate error", [], false) { }
+
+    public override string Message => _message;
+
+    public override IError? InnerError => _innerErrors.FirstOrDefault();
 
     public bool IsAggregate => true;
 
-    public IEnumerable<IError> InnerErrors => innerErrors;
-
-    public string ToString(string? format, IFormatProvider? formatProvider)
-    {
-        return (format is not null ? ErrorFormatter.ByFormat(format) : ErrorFormatter.Default).Format(this);
-    }
-
-    public override string ToString()
-    {
-        return ErrorFormatter.Default.Format(this);
-    }
-}
-
-
-public class AggregateTracedError(string message, IEnumerable<IError> innerErrors, StackTrace stackTrace)
-    : AggregateError(message, innerErrors), ITracedError
-{
-    [StackTraceHidden]
-    public AggregateTracedError(string message, IEnumerable<IError> innerErrors) :
-        this(message, innerErrors, new StackTrace(0, true)) {}
-    public string? StackTrace => stackTrace.ToString();
-    public StackTrace? LocalStackTrace => stackTrace;
+    public IEnumerable<IError> InnerErrors => _innerErrors;
 }
