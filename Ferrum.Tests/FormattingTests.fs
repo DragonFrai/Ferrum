@@ -10,7 +10,7 @@ open Ferrum.FSharp
 
 let singleError = Error.failure "Final"
 let chainError = Error.context "Final" <| (Error.context "Middle" <| Error.failure "Root")
-let tracedSingleError: IError = DynamicError("Final", (null: IError), "   at final\n")
+let tracedSingleError: IError = DynamicError("Final", "   at final\n")
 let tracedChainError: IError =
     DynamicError(
         "Final",

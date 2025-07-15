@@ -1,7 +1,6 @@
 namespace Ferrum.FSharp
 
 open System
-open System.Collections.Generic
 open System.Diagnostics
 
 open FSharp.Core
@@ -36,9 +35,6 @@ module Error =
 
     let inline aggregate (message: string) (errors: IError seq) : IError =
         AggregateError(message, errors)
-
-    let aggregateNoClone (message: string) (innerErrors: IReadOnlyList<IError>) : IError =
-        AggregateError(message, innerErrors, false)
 
     [<StackTraceHidden>]
     let inline aggregateTraced (message: string) (innerErrors: IError seq) : IError =
@@ -155,15 +151,15 @@ module Error =
         error.FormatX()
 
     let inline box (error: 'e) : IError =
-        ObjectError(error)
+        ValueError(error)
 
     let inline boxWith (toString: 'e -> string) (error: 'e) : IError =
-        ObjectError(error, toString)
+        ValueError(error, toString)
 
     [<StackTraceHidden>]
     let inline boxTraced (error: 'e) : IError =
-        TracedObjectError(error)
+        TracedValueError(error)
 
     [<StackTraceHidden>]
     let inline boxWithTraced (toString: 'e -> string) (error: 'e) : IError =
-        TracedObjectError(error, toString)
+        TracedValueError(error, toString)

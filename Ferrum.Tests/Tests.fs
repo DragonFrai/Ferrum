@@ -26,7 +26,7 @@ let ``ObjectError works`` () =
         let err = f errorToWrap
         Assert.Equal(errorToWrap.ToString(), err.Message)
         Assert.Equal(null, err.InnerError)
-    do test (fun err -> ObjectError(err))
+    do test (fun err -> ValueError(err))
     do test Error.box
     do test (fun err -> Result.boxError (Error err) |> Result.getError)
 

@@ -2,10 +2,10 @@ using System.Diagnostics;
 
 namespace Ferrum.Errors;
 
-public class TracedObjectError<T> : ObjectError<T>, ITracedError
+public class TracedValueError<T> : ValueError<T>, ITracedError
 {
     [StackTraceHidden]
-    public TracedObjectError(T error, Func<T, string>? toString = null) : base(error, toString)
+    public TracedValueError(T value, Func<T, string>? toMessage = null) : base(value, toMessage)
     {
         var localStackTrace = new StackTrace(0, true);
         LocalStackTrace = localStackTrace;

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using System.Collections.ObjectModel;
 
 namespace Ferrum.Errors;
 
@@ -6,59 +6,47 @@ namespace Ferrum.Errors;
 public class AggregateError : BaseError, IAggregateError
 {
     private readonly string _message;
-    private readonly IReadOnlyCollection<IError> _innerErrors;
+    private readonly IError[] _innerErrors;
+    private IReadOnlyCollection<IError>? _rocView;
 
-    private static ArgumentNullException ErrorIsNull(string argName, int index)
-    {
-        return new ArgumentNullException($"{argName}[{index}]");
-    }
-
-    public AggregateError(string message, IReadOnlyList<IError> innerErrors, bool cloneInnerErrors = true)
+    private AggregateError(string? message, IError[] innerErrors, IReadOnlyCollection<IError>? rocView)
     {
         ArgumentNullException.ThrowIfNull(innerErrors, nameof(innerErrors));
-        var count = innerErrors.Count;
-        IReadOnlyCollection<IError> innerErrorsCollection;
-        if (cloneInnerErrors)
+        var nullAt = Helpers.CheckNotNullItems(innerErrors);
+        if (nullAt != -1)
         {
-            var innerErrorsArray = new IError[count];
-            for (var i = 0; i < count; i++)
-            {
-                var error = innerErrors[i];
-                innerErrorsArray[i] = error ?? throw ErrorIsNull(nameof(innerErrors), i);
-            }
-            innerErrorsCollection = innerErrorsArray;
+            throw new ArgumentNullException($"{nameof(innerErrors)}[{nullAt}]");
         }
-        else
-        {
-            for (var i = 0; i < count; i++)
-            {
-                var error = innerErrors[i];
-                if (error is null)
-                {
-                    throw ErrorIsNull(nameof(innerErrors), i);
-                }
-            }
-            innerErrorsCollection = innerErrors;
-        }
-
-        _innerErrors = innerErrorsCollection;
-        _message = message;
+        _message = message ?? Helpers.DefaultErrorMessage<AggregateError>();
+        _innerErrors = innerErrors;
+        _rocView = rocView;
     }
 
-    public AggregateError(string message, IEnumerable<IError> innerErrors)
-        : this(message, innerErrors.ToArray(), false) { }
+    public AggregateError(string? message, IError[] innerErrors)
+        : this(message, Helpers.ArrayCopy(innerErrors), null) { }
 
-    public AggregateError(string message)
-        : this(message, [], false) { }
+    public AggregateError(string? message, IEnumerable<IError> innerErrors)
+        : this(message, innerErrors.ToArray(), null) { }
+
+    public AggregateError(string? message)
+        : this(message, [], null) { }
 
     public AggregateError()
-        : this("Aggregate error", [], false) { }
+        : this(null, [], null) { }
 
     public override string Message => _message;
 
     public override IError? InnerError => _innerErrors.FirstOrDefault();
 
-    public bool IsAggregate => true;
-
-    public IEnumerable<IError> InnerErrors => _innerErrors;
+    public IReadOnlyCollection<IError> InnerErrors
+    {
+        get
+        {
+            if (_rocView is not null) return _rocView;
+            var rocView = _innerErrors.Length != 0
+                ? new ReadOnlyCollection<IError>(_innerErrors)
+                : ReadOnlyCollection<IError>.Empty;
+            return _rocView = rocView;
+        }
+    }
 }

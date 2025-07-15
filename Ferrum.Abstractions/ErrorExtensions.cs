@@ -39,12 +39,12 @@ public static class ErrorExtensions
 
     public static bool GetIsAggregate(this IError error)
     {
-        return error is IAggregateError { IsAggregate: true };
+        return error is IAggregateError { InnerErrors: not null };
     }
 
-    public static IEnumerable<IError> GetInnerErrors(this IError error)
+    public static IReadOnlyCollection<IError> GetInnerErrors(this IError error)
     {
-        if (error is IAggregateError aggregateError)
+        if (error is IAggregateError { InnerErrors: not null } aggregateError)
         {
             return aggregateError.InnerErrors;
         }
@@ -54,6 +54,7 @@ public static class ErrorExtensions
         {
             return [innerError];
         }
+
         return [];
     }
 

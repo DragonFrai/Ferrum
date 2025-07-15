@@ -56,10 +56,10 @@ type GraphvizErrorFormatter private () =
     static member Instance: GraphvizErrorFormatter = _instance
 
     member this.Format(ex: exn) : string =
-        let getExceptionSources (ex: exn) =
+        let getExceptionSources (ex: exn) : exn seq =
             match ex with
             | :? AggregateException as ex ->
-                ex.InnerExceptions :> _ seq
+                ex.InnerExceptions
             | ex ->
                 match ex.InnerException with
                 | null -> Seq.empty
@@ -68,7 +68,7 @@ type GraphvizErrorFormatter private () =
 
     interface IErrorFormatter with
         member this.Format(error) =
-            let getErrorSources (err: IError) =
+            let getErrorSources (err: IError) : IError seq =
                 match err with
                 | :? IAggregateError as err ->
                     err.InnerErrors

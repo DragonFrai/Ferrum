@@ -5,41 +5,41 @@ namespace Ferrum.Errors;
 
 public class TracedAggregateError : AggregateError, ITracedError
 {
-    private StackTrace? _localStackTrace;
-    private string? _stackTrace;
+    private readonly StackTrace? _localStackTrace;
+    private readonly string? _stackTrace;
 
     [StackTraceHidden]
-    private static void InitStackTrace(TracedAggregateError error)
+    public TracedAggregateError(string message, IError[] innerErrors)
+        : base(message, innerErrors)
     {
         var localStackTrace = new StackTrace(0, true);
-        error._localStackTrace = localStackTrace;
-        error._stackTrace = localStackTrace.ToString();
-    }
-
-    [StackTraceHidden]
-    public TracedAggregateError(string message, IReadOnlyList<IError> innerErrors, bool cloneInnerErrors = true)
-        : base(message, innerErrors, cloneInnerErrors)
-    {
-        InitStackTrace(this);
+        _localStackTrace = localStackTrace;
+        _stackTrace = localStackTrace.ToString();
     }
 
     [StackTraceHidden]
     public TracedAggregateError(string message, IEnumerable<IError> innerErrors)
         : base(message, innerErrors)
     {
-        InitStackTrace(this);
+        var localStackTrace = new StackTrace(0, true);
+        _localStackTrace = localStackTrace;
+        _stackTrace = localStackTrace.ToString();
     }
 
     [StackTraceHidden]
     public TracedAggregateError(string message) : base(message)
     {
-        InitStackTrace(this);
+        var localStackTrace = new StackTrace(0, true);
+        _localStackTrace = localStackTrace;
+        _stackTrace = localStackTrace.ToString();
     }
 
     [StackTraceHidden]
     public TracedAggregateError() : base()
     {
-        InitStackTrace(this);
+        var localStackTrace = new StackTrace(0, true);
+        _localStackTrace = localStackTrace;
+        _stackTrace = localStackTrace.ToString();
     }
 
     public string? StackTrace => _stackTrace;
