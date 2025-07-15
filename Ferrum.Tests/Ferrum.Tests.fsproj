@@ -29,8 +29,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Ferrum.Graphviz\Ferrum.Graphviz.fsproj" />
       <ProjectReference Include="..\Ferrum.FSharp\Ferrum.FSharp.fsproj" />
+      <ProjectReference Include="..\Ferrum.Graphviz\Ferrum.Graphviz.csproj" />
     </ItemGroup>
 
 </Project>

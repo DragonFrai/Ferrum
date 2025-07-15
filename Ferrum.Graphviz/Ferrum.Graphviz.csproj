@@ -14,19 +14,19 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="/" Visible="false"/>
         <None Include="..\logo\project-logo.png" Pack="true" PackagePath="/" Visible="false"/>
     </ItemGroup>
 
-    <!--    -->
-
     <ItemGroup>
-        <Compile Include="Library.fs"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Ferrum.FSharp\Ferrum.FSharp.fsproj" />
+      <ProjectReference Include="..\Ferrum.Abstractions\Ferrum.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>

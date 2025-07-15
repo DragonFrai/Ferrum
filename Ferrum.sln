@@ -6,11 +6,11 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.Examples", "Ferrum.E
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.Tests", "Ferrum.Tests\Ferrum.Tests.fsproj", "{45F5EA37-2AA9-474D-A0F3-FA4D392DE759}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.Graphviz", "Ferrum.Graphviz\Ferrum.Graphviz.fsproj", "{FF8BD6A5-FC65-48C0-B785-9C6FC413FA62}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ferrum.Abstractions", "Ferrum.Abstractions\Ferrum.Abstractions.csproj", "{4633FE8D-3FE1-4D69-92E9-CA310EE98645}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ferrum", "Ferrum\Ferrum.csproj", "{D88954A6-1791-4D56-B5A6-E847DE1AE3C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ferrum.Graphviz", "Ferrum.Graphviz\Ferrum.Graphviz.csproj", "{B1E4268E-B738-4594-B254-BA555B9A4E0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,10 +30,6 @@ Global
 		{45F5EA37-2AA9-474D-A0F3-FA4D392DE759}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45F5EA37-2AA9-474D-A0F3-FA4D392DE759}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45F5EA37-2AA9-474D-A0F3-FA4D392DE759}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF8BD6A5-FC65-48C0-B785-9C6FC413FA62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF8BD6A5-FC65-48C0-B785-9C6FC413FA62}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF8BD6A5-FC65-48C0-B785-9C6FC413FA62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF8BD6A5-FC65-48C0-B785-9C6FC413FA62}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4633FE8D-3FE1-4D69-92E9-CA310EE98645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4633FE8D-3FE1-4D69-92E9-CA310EE98645}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4633FE8D-3FE1-4D69-92E9-CA310EE98645}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,5 +38,9 @@ Global
 		{D88954A6-1791-4D56-B5A6-E847DE1AE3C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D88954A6-1791-4D56-B5A6-E847DE1AE3C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D88954A6-1791-4D56-B5A6-E847DE1AE3C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1E4268E-B738-4594-B254-BA555B9A4E0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1E4268E-B738-4594-B254-BA555B9A4E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1E4268E-B738-4594-B254-BA555B9A4E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1E4268E-B738-4594-B254-BA555B9A4E0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
