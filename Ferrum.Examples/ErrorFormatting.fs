@@ -11,11 +11,11 @@ open Ferrum.Formatting.Formatters
 let run () =
 
     let error =
-        Error.context "User not created" (Error.context "Name already used" (Error.failure "File already exists"))
+        Error.context "User not created" (Error.context "Name already used" (Error.message "File already exists"))
     let errorTraced =
         Error.contextTraced "User not created"
             (Error.contextTraced "Name already used"
-                (Error.failureTraced "File already exists"))
+                (Error.messageTraced "File already exists"))
 
     // Using formatter
     printfn $"{Error.format SummaryErrorFormatter.Instance error}"

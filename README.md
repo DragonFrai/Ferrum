@@ -22,15 +22,15 @@ Ferrum provides 2 fundamental error types `MessageError` and `ContextError`.
 
 Composing this error types forms errors chain like exceptions combines.
 
-Functions `Error.failure/Result.failure` and `Error.context/Result.context`
+Functions `Error.message/Result.message` and `Error.context/Result.context`
 can be used for creating its errors.
 
 ```fsharp
-let messageError: IError = Error.failure "This is some error"
+let messageError: IError = Error.message "This is some error"
 printfn $"> {Error.formatS messageError}"
 //> This is some error
 
-let contextualError: IError = Error.context "Final error" (Error.failure "Root error")
+let contextualError: IError = Error.context "Final error" (Error.message "Root error")
 printfn $"> {Error.formatS contextualError}"
 //> Final error: Root error
 ```
@@ -47,7 +47,7 @@ let err = Error.ofException ex
 printfn $"{Error.formatS err}"
 // Some exn: Inner exn
 
-let err = Error.context "Some error" (Error.failure "Inner error")
+let err = Error.context "Some error" (Error.message "Inner error")
 let ex = Error.toException err
 printfn $"{ex}"
 // Ferrum.ErrorException: Some error
@@ -192,8 +192,8 @@ Errors is a values that creates once and moving to different places.
 It's requires explicit adding tracing inside error value.
 
 For creating `IError` with stack trace, provided functions 
-`Error.failureTraced`, `Error.contextTraced`, `Error.aggregateTraced`, `Error.boxTraced`,
-`Result.failureTraced`, `Result.contextTraced`, `Result.aggregateTraced`, `Result.boxErrorTraced`.
+`Error.messageTraced`, `Error.contextTraced`, `Error.aggregateTraced`, `Error.boxTraced`,
+`Result.messageTraced`, `Result.contextTraced`, `Result.aggregateTraced`, `Result.boxErrorTraced`.
 
 All functions above always add stack trace to error. 
 Ferrum does not provide dynamic tracing or not error based on environment.

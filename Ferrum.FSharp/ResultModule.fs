@@ -6,12 +6,12 @@ open FSharp.Core
 [<RequireQualifiedAccess>]
 module Result =
 
-    let failure (message: string) : Result<'a, IError> =
-        Error (Error.failure message)
+    let message (message: string) : Result<'a, IError> =
+        Error (Error.message message)
 
     [<StackTraceHidden>]
-    let failureTraced (message: string) : Result<'a, IError> =
-        Error (Error.failureTraced message)
+    let messageTraced (message: string) : Result<'a, IError> =
+        Error (Error.messageTraced message)
 
     let context (context: string) (result: Result<'a, IError>) : Result<'a, IError> =
         match result with

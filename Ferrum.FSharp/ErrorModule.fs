@@ -13,17 +13,17 @@ open Ferrum.Formatting
 [<RequireQualifiedAccess>]
 module Error =
 
-    let message (err: IError) : string =
+    let getMessage (err: IError) : string =
         match err.Message with null -> String.Empty | msg -> msg
 
-    let innerError (err: IError) : IError option =
+    let getInnerError (err: IError) : IError option =
         err.InnerError |> Option.ofObj
 
-    let inline failure (message: string) : IError =
+    let inline message (message: string) : IError =
         MessageError(message)
 
     [<StackTraceHidden>]
-    let inline failureTraced (message: string) : IError =
+    let inline messageTraced (message: string) : IError =
         TracedMessageError(message)
 
     let inline context (message: string) (source: IError) : IError =
@@ -40,7 +40,11 @@ module Error =
     let inline aggregateTraced (message: string) (innerErrors: IError seq) : IError =
         TracedAggregateError(message, innerErrors)
 
-    let inline isAggregate (err: IError) : bool =
+    /// <summary>
+    /// <see cref="Ferrum.ErrorExtensions.GetIsAggregate"/>
+    /// </summary>
+    /// <param name="err"></param>
+    let inline getIsAggregate (err: IError) : bool =
         err.GetIsAggregate()
 
     /// <summary>
@@ -50,12 +54,16 @@ module Error =
     /// </summary>
     /// <param name="error"></param>
     /// <example>
-    /// Error.failure "Err" |> Error.innerErrors // = [ ] <br/>
-    /// Error.context "Err2" (Error.failure "Err1") |> Error.innerErrors // = [ Error.failure "Err1" ] <br/>
-    /// Error.aggregate "Agg" [ Error.failure "Err1"; Error.failure "Err2" ]
-    /// |> Error.innerErrors // = [ Error.failure "Err1"; Error.failure "Err2" ] <br/>
+    /// <code>
+    /// // = [ ]
+    /// Error.message "Err" |> Error.getInnerErrors
+    /// // = [ Error.message "Err1" ]
+    /// Error.context "Err2" (Error.message "Err1") |> Error.getInnerErrors
+    /// // = [ Error.message "Err1"; Error.message "Err2" ]
+    /// Error.aggregate "Agg" [ Error.message "Err1"; Error.message "Err2" ] |> Error.getInnerErrors
+    /// </code>
     /// </example>
-    let inline innerErrors (error: IError) : IError seq =
+    let inline getInnerErrors (error: IError) : IError seq =
         error.GetInnerErrors()
 
     let inline chain (error: IError) : IError seq =
@@ -64,10 +72,10 @@ module Error =
     let inline getRoot (error: IError) : IError =
         error.GetRoot()
 
-    let stackTrace (error: IError) : string option =
+    let getStackTrace (error: IError) : string option =
         error.GetStackTrace() |> Option.ofObj
 
-    let localStackTrace (error: IError) : StackTrace option =
+    let getLocalStackTrace (error: IError) : StackTrace option =
         error.GetLocalStackTrace() |> Option.ofObj
 
     let ofException (ex: exn) : IError =

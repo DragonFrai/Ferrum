@@ -10,16 +10,16 @@ type SomeError = SomeError
 let run () =
 
     // Creating primary message errors
-    let messageError: IError = Error.failure "This is some error"
-    let messageResult: Result<unit, IError> = Result.failure "This is some error"
+    let messageError: IError = Error.message "This is some error"
+    let messageResult: Result<unit, IError> = Result.message "This is some error"
     printfn $" > {Error.formatS messageError}"
     printfn $" > {Utils.formatResult Error.formatS messageResult}"
     // > This is some error
     // > Error (This is some error)
 
     // Adding error context
-    let contextualError: IError = Error.context "Final error" (Error.failure "Root error")
-    let contextualResult: Result<unit, IError> = Result.context "Top error" (Result.failure "Root error")
+    let contextualError: IError = Error.context "Final error" (Error.message "Root error")
+    let contextualResult: Result<unit, IError> = Result.context "Top error" (Result.message "Root error")
     printfn $" > {Error.formatS contextualError}"
     printfn $" > {Utils.formatResult Error.formatS contextualResult}"
     // > Final error: Root error
