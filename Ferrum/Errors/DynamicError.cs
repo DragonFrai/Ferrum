@@ -10,8 +10,7 @@ public class DynamicError : BaseError, IAggregateError, ITracedError
     private readonly string _message;
     private readonly IError? _innerError;
     private readonly IError[]? _innerErrors;
-    private readonly string? _stackTrace;
-    private readonly StackTrace? _localStackTrace;
+    private StackTraceCell _stackTraceCell;
 
     private IReadOnlyCollection<IError>? _innerErrorsRocView;
 
@@ -35,23 +34,14 @@ public class DynamicError : BaseError, IAggregateError, ITracedError
             default:
                 throw new InvalidOperationException();
         }
-        switch (stacks)
+
+        _stackTraceCell = stacks switch
         {
-            case null:
-                _stackTrace = null;
-                _localStackTrace = null;
-                break;
-            case string stackTrace:
-                _stackTrace = stackTrace;
-                _localStackTrace = null;
-                break;
-            case StackTrace localStackTrace:
-                _stackTrace = localStackTrace.ToString();
-                _localStackTrace = localStackTrace;
-                break;
-            default:
-                throw new InvalidOperationException();
-        }
+            null => new StackTraceCell(null, null),
+            string stackTrace => new StackTraceCell(null, stackTrace),
+            StackTrace localStackTrace => new StackTraceCell(localStackTrace, null),
+            _ => throw new InvalidOperationException()
+        };
     }
 
     // ReSharper disable RedundantCast
@@ -176,9 +166,9 @@ public class DynamicError : BaseError, IAggregateError, ITracedError
         }
     }
 
-    public string? StackTrace => _stackTrace;
+    public string? StackTrace => _stackTraceCell.GetStackTrace();
 
-    public StackTrace? LocalStackTrace => _localStackTrace;
+    public StackTrace? LocalStackTrace => _stackTraceCell.GetLocalStackTrace();
 
 }
 

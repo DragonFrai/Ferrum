@@ -5,15 +5,16 @@ namespace Ferrum.Errors;
 
 public class TracedContextError : ContextError, ITracedError
 {
+    private StackTraceCell _stackTraceCell;
+
     [StackTraceHidden]
+    // ReSharper disable once ConvertToPrimaryConstructor
     public TracedContextError(string message, IError innerError) : base(message, innerError)
     {
-        var localStackTrace = new StackTrace(0, true);
-        LocalStackTrace = localStackTrace;
-        StackTrace = localStackTrace.ToString();
+        _stackTraceCell = new StackTraceCell();
     }
 
-    public string StackTrace { get; }
+    public string? StackTrace => _stackTraceCell.GetStackTrace();
 
-    public StackTrace LocalStackTrace { get; }
+    public StackTrace? LocalStackTrace => _stackTraceCell.GetLocalStackTrace();
 }

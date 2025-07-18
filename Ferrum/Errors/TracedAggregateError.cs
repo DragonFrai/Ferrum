@@ -5,44 +5,36 @@ namespace Ferrum.Errors;
 
 public class TracedAggregateError : AggregateError, ITracedError
 {
-    private readonly StackTrace? _localStackTrace;
-    private readonly string? _stackTrace;
+    private StackTraceCell _stackTraceCell;
 
     [StackTraceHidden]
     public TracedAggregateError(string message, IError[] innerErrors)
         : base(message, innerErrors)
     {
-        var localStackTrace = new StackTrace(0, true);
-        _localStackTrace = localStackTrace;
-        _stackTrace = localStackTrace.ToString();
+        _stackTraceCell = new StackTraceCell();
     }
 
     [StackTraceHidden]
     public TracedAggregateError(string message, IEnumerable<IError> innerErrors)
         : base(message, innerErrors)
     {
-        var localStackTrace = new StackTrace(0, true);
-        _localStackTrace = localStackTrace;
-        _stackTrace = localStackTrace.ToString();
+        _stackTraceCell = new StackTraceCell();
     }
 
     [StackTraceHidden]
     public TracedAggregateError(string message) : base(message)
     {
-        var localStackTrace = new StackTrace(0, true);
-        _localStackTrace = localStackTrace;
-        _stackTrace = localStackTrace.ToString();
+        _stackTraceCell = new StackTraceCell();
     }
 
     [StackTraceHidden]
+    // ReSharper disable once RedundantBaseConstructorCall
     public TracedAggregateError() : base()
     {
-        var localStackTrace = new StackTrace(0, true);
-        _localStackTrace = localStackTrace;
-        _stackTrace = localStackTrace.ToString();
+        _stackTraceCell = new StackTraceCell();
     }
 
-    public string? StackTrace => _stackTrace;
+    public string? StackTrace => _stackTraceCell.GetStackTrace();
 
-    public StackTrace? LocalStackTrace => _localStackTrace;
+    public StackTrace? LocalStackTrace => _stackTraceCell.GetLocalStackTrace();
 }

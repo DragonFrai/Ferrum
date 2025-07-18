@@ -1,6 +1,6 @@
 namespace Ferrum.Formatting;
 
-public static class ErrorExtensions
+public static class FormattersErrorExtensions
 {
     public static string Format(this IError error, string format)
     {

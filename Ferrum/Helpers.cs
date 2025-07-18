@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 
 namespace Ferrum;
@@ -85,6 +86,50 @@ internal static class Helpers
         var copy = new T[array.Length];
         Array.Copy(array, copy, array.Length);
         return copy;
+    }
+
+}
+
+/// <summary>
+/// Internal util for caching stack trace string
+/// </summary>
+// Okay... How to test it in the dedicated project?
+internal struct StackTraceCell
+{
+    private readonly StackTrace? _stackTrace;
+    private string? _stackTraceString;
+
+    public StackTraceCell(StackTrace? stackTrace, string? stackTraceString)
+    {
+        _stackTrace = stackTrace;
+        _stackTraceString = stackTraceString;
+    }
+
+    [StackTraceHidden]
+    public StackTraceCell() : this(new StackTrace(0, true), null)
+    { }
+
+    public string? GetStackTrace()
+    {
+        if (_stackTraceString is not null)
+        {
+            return _stackTraceString;
+        }
+
+        // ReSharper disable once InvertIf
+        if (_stackTrace is not null)
+        {
+            var stackTraceString = _stackTrace.ToString();
+            _stackTraceString = stackTraceString;
+            return stackTraceString;
+        }
+
+        return null;
+    }
+
+    public StackTrace? GetLocalStackTrace()
+    {
+        return _stackTrace;
     }
 
 }

@@ -1,11 +1,9 @@
-﻿using Ferrum.ExceptionInterop;
+﻿namespace Ferrum;
 
-namespace Ferrum;
-
-using Ferrum.Errors;
+using Errors;
 
 
-public static class ErrorExtensions
+public static class ErrorsErrorExtensions
 {
     public static IError Context(this IError error, string message)
     {

@@ -4,15 +4,16 @@ namespace Ferrum.Errors;
 
 public class TracedMessageError : MessageError, ITracedError
 {
+    private StackTraceCell _stackTraceCell;
+
     [StackTraceHidden]
+    // ReSharper disable once ConvertToPrimaryConstructor
     public TracedMessageError(string message) : base(message)
     {
-        var localStackTrace = new StackTrace(0, true);
-        LocalStackTrace = localStackTrace;
-        StackTrace = localStackTrace.ToString();
+        _stackTraceCell = new StackTraceCell();
     }
 
-    public string StackTrace { get; }
+    public string? StackTrace => _stackTraceCell.GetStackTrace();
 
-    public StackTrace LocalStackTrace { get; }
+    public StackTrace? LocalStackTrace => _stackTraceCell.GetLocalStackTrace();
 }
