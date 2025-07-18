@@ -1,10 +1,14 @@
-using System.Diagnostics;
-
 namespace Ferrum;
 
 
 public interface ITracedError : IError
 {
-    string? StackTrace { get; }
+    /// <summary>
+    /// true if StackTrace property not null.
+    /// </summary>
+    public bool HasStackTrace { get; } // => StackTrace is not null;
+
+    public string? StackTrace { get; }
+
     // TODO?: Revive `StackTrace? LocalStackTrace` property
 }

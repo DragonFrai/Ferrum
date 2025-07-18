@@ -170,8 +170,7 @@ public class DynamicError : BaseError, IAggregateError, ITracedError
         }
     }
 
-    public string? StackTrace => _stackTraceCell.GetStackTrace();
+    public string? StackTrace => _stackTraceCell.StackTrace;
 
-    public StackTrace? LocalStackTrace => _stackTraceCell.GetLocalStackTrace();
-
+    public bool HasStackTrace => _stackTraceCell.HasStackTrace;
 }

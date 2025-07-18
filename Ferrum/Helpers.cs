@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
+// ReSharper disable ArrangeAccessorOwnerBody
+// ReSharper disable ConvertToAutoPropertyWhenPossible
 
 namespace Ferrum;
 
@@ -109,27 +111,29 @@ internal struct StackTraceCell
     public StackTraceCell() : this(new StackTrace(0, true), null)
     { }
 
-    public string? GetStackTrace()
+    public string? StackTrace
     {
-        if (_stackTraceString is not null)
+        get
         {
-            return _stackTraceString;
-        }
+            if (_stackTraceString is not null)
+            {
+                return _stackTraceString;
+            }
 
-        // ReSharper disable once InvertIf
-        if (_stackTrace is not null)
-        {
-            var stackTraceString = _stackTrace.ToString();
-            _stackTraceString = stackTraceString;
-            return stackTraceString;
-        }
+            // ReSharper disable once InvertIf
+            if (_stackTrace is not null)
+            {
+                var stackTraceString = _stackTrace.ToString();
+                _stackTraceString = stackTraceString;
+                return stackTraceString;
+            }
 
-        return null;
+            return null;
+        }
     }
 
-    public StackTrace? GetLocalStackTrace()
-    {
-        return _stackTrace;
-    }
+    public StackTrace? LocalStackTrace => _stackTrace;
+
+    public bool HasStackTrace => _stackTrace is not null || _stackTraceString is not null;
 
 }

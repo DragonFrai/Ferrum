@@ -14,5 +14,7 @@ public class TracedContextError : ContextError, ITracedError
         _stackTraceCell = new StackTraceCell();
     }
 
-    public string? StackTrace => _stackTraceCell.GetStackTrace();
+    public string? StackTrace => _stackTraceCell.StackTrace;
+
+    public bool HasStackTrace => _stackTraceCell.HasStackTrace;
 }

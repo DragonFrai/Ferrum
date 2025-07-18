@@ -23,5 +23,6 @@ public class ExceptionError : ITracedError
     public string Message => _exception.Message;
     public IError? InnerError => _innerError;
     public string? StackTrace => _exception.StackTrace;
+    public bool HasStackTrace => _exception.StackTrace is not null;
     public StackTrace? LocalStackTrace => null;
 }
