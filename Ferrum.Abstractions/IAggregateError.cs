@@ -17,5 +17,5 @@ public interface IAggregateError : IError
     /// If semantic checks and allocations are not critical,
     /// see <see cref="Ferrum.ErrorExtensions.GetInnerErrors"/> extension.
     /// </remarks>
-    IReadOnlyCollection<IError>? InnerErrors { get; }
+    public IReadOnlyCollection<IError>? InnerErrors { get; }
 }

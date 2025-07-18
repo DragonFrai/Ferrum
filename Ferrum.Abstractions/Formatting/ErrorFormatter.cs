@@ -3,5 +3,5 @@ namespace Ferrum.Formatting;
 
 public interface IErrorFormatter
 {
-    string Format(IError error);
+    public string Format(IError error);
 }
