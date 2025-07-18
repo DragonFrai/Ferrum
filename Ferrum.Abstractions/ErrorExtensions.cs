@@ -32,11 +32,6 @@ public static class ErrorExtensions
         return (error as ITracedError)?.StackTrace;
     }
 
-    public static StackTrace? GetLocalStackTrace(this IError error)
-    {
-        return (error as ITracedError)?.LocalStackTrace;
-    }
-
     public static bool GetIsAggregate(this IError error)
     {
         return error is IAggregateError { InnerErrors: not null };

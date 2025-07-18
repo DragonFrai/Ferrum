@@ -35,6 +35,4 @@ public class TracedAggregateError : AggregateError, ITracedError
     }
 
     public string? StackTrace => _stackTraceCell.GetStackTrace();
-
-    public StackTrace? LocalStackTrace => _stackTraceCell.GetLocalStackTrace();
 }

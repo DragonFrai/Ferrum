@@ -10,9 +10,9 @@ public class DynamicError : BaseError, IAggregateError, ITracedError
     private readonly string _message;
     private readonly IError? _innerError;
     private readonly IError[]? _innerErrors;
+    private IReadOnlyCollection<IError>? _innerErrorsRocView;
     private StackTraceCell _stackTraceCell;
 
-    private IReadOnlyCollection<IError>? _innerErrorsRocView;
 
     internal DynamicError(string? message, object? inners, object? stacks)
     {
@@ -44,14 +44,18 @@ public class DynamicError : BaseError, IAggregateError, ITracedError
         };
     }
 
+    private DynamicError(string? message, object? inners, bool captureStackTrace) :
+        this(message, inners, captureStackTrace ? new StackTrace(0, true) : null)
+    { }
+
     // ReSharper disable RedundantCast
 
-    public DynamicError(string message, IError innerError, StackTrace localStackTrace)
+    public DynamicError(string message, IError innerError, bool captureStackTrace)
         : this
         (
             (string?) Helpers.PassNotNull(message, nameof(message)),
             (object?) Helpers.PassNotNull(innerError, nameof(innerError)),
-            (object?) Helpers.PassNotNull(localStackTrace, nameof(localStackTrace))
+            (bool) captureStackTrace
         )
     { }
 
@@ -64,12 +68,12 @@ public class DynamicError : BaseError, IAggregateError, ITracedError
         )
     { }
 
-    public DynamicError(string message, IError[] innerErrors, StackTrace localStackTrace)
+    public DynamicError(string message, IError[] innerErrors, bool captureStackTrace)
         : this
         (
             (string?) Helpers.PassNotNull(message, nameof(message)),
             (object?) Helpers.PassNotNull(innerErrors, nameof(innerErrors)),
-            (object?) Helpers.PassNotNull(localStackTrace, nameof(localStackTrace))
+            (bool) captureStackTrace
         )
     { }
 
@@ -82,12 +86,12 @@ public class DynamicError : BaseError, IAggregateError, ITracedError
         )
     { }
 
-    public DynamicError(string message, StackTrace localStackTrace)
+    public DynamicError(string message, bool captureStackTrace)
         : this
         (
             (string?) Helpers.PassNotNull(message, nameof(message)),
             (object?) null,
-            (object?) Helpers.PassNotNull(localStackTrace, nameof(localStackTrace))
+            (bool) captureStackTrace
         )
     { }
 

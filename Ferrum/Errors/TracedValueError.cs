@@ -14,6 +14,4 @@ public class TracedValueError<T> : ValueError<T>, ITracedError
     }
 
     public string? StackTrace => _stackTraceCell.GetStackTrace();
-
-    public StackTrace? LocalStackTrace => _stackTraceCell.GetLocalStackTrace();
 }

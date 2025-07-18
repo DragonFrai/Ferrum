@@ -75,9 +75,6 @@ module Error =
     let getStackTrace (error: IError) : string option =
         error.GetStackTrace() |> Option.ofObj
 
-    let getLocalStackTrace (error: IError) : StackTrace option =
-        error.GetLocalStackTrace() |> Option.ofObj
-
     let ofException (ex: exn) : IError =
         ExceptionError(ex)
 

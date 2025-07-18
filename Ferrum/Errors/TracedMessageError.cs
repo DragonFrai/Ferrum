@@ -14,6 +14,4 @@ public class TracedMessageError : MessageError, ITracedError
     }
 
     public string? StackTrace => _stackTraceCell.GetStackTrace();
-
-    public StackTrace? LocalStackTrace => _stackTraceCell.GetLocalStackTrace();
 }
