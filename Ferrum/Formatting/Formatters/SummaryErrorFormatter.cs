@@ -11,12 +11,16 @@ public class SummaryErrorFormatter : IErrorFormatter
     public string Format(IError error)
     {
         var sb = new StringBuilder();
-        sb = Fmt.FoldChain(
-            (s, err) => s.AppendErrorMessage(err),
-            (s, err) => s.AppendLiteralColon().AppendErrorMessage(err),
-            error,
-            sb
-        );
+
+        sb.AppendErrorMessage(error);
+
+        IError? current = error.InnerError;
+        while (current is not null)
+        {
+            sb.Append(": ").AppendErrorMessage(current);
+            current = current.InnerError;
+        }
+
         return sb.ToString();
     }
 }

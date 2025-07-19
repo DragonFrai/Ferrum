@@ -11,20 +11,38 @@ public class DetailedErrorFormatter : IErrorFormatter
     public string Format(IError error)
     {
         var sb = new StringBuilder();
-        Fmt.FoldChainWith(
-            (s, err) =>
-                s.AppendLiteralError()
-                    .AppendErrorMessage(err)
-                    .AppendLine(),
-            (s, err) =>
-                s.AppendLiteralCause()
-                    .AppendErrorMessage(err)
-                    .AppendLine(),
-            (s, err) =>
-                s.AppendErrorTrace(err),
-            error,
-            sb
-        );
+
+        IError? current = error;
+        int index = 0;
+        ITracedError? lastTraced = null;
+        int lastTracedIndex = -1;
+        while (current is not null)
+        {
+            if (current is ITracedError { HasStackTrace: true } tracedCurrent)
+            {
+                lastTracedIndex = index;
+                lastTraced = tracedCurrent;
+            }
+
+            if (index == 0)
+            {
+                sb.Append('[').Append(index).Append("] Error: ").AppendErrorMessage(current).AppendLine();
+            }
+            else
+            {
+                sb.Append('[').Append(index).Append("] Cause: ").AppendErrorMessage(current).AppendLine();
+            }
+
+            index++;
+            current = current.InnerError;
+        }
+
+        if (lastTraced is not null)
+        {
+            sb.Append("Trace [").Append(lastTracedIndex).Append("]:").AppendLine()
+                .AppendErrorTrace(lastTraced.StackTrace);
+        }
+
         return sb.ToString();
     }
 }

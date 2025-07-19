@@ -11,11 +11,9 @@ open Ferrum.Formatting.Formatters
 let run () =
 
     let error =
-        Error.context "User not created" (Error.context "Name already used" (Error.message "File already exists"))
-    let errorTraced =
-        Error.contextTraced "User not created"
-            (Error.contextTraced "Name already used"
-                (Error.messageTraced "File already exists"))
+        Error.message "File already exists"
+        |> Error.contextTraced "Name already used"
+        |> Error.contextTraced "User not created"
 
     // Using formatter
     printfn $"{Error.format SummaryErrorFormatter.Instance error}"
@@ -41,18 +39,22 @@ let run () =
     printfn $"S > {Error.formatS error}"
 
     // D >
-    // Error: User not created
-    // Cause: Name already used
-    // Cause: File not found
-    //
-    printfn $"D >\n{Error.formatD error}"
+    // [0] Error: User not created
+    // [1] Cause: Name already used
+    // [2] Cause: File already exists
+    // Trace [1]:
+    //    at ...
+    //    at ...
+    printf $"D >\n{Error.formatD error}"
 
     // X >
-    // Error: User not created
+    // [0] Error: User not created
+    // [1] Cause: Name already used
+    // [2] Cause: File already exists
+    // Trace [0]:
     //    at ...
-    // Cause: Name already used
     //    at ...
-    // Cause: File not found
+    // Trace [1]:
     //    at ...
-    //
-    printfn $"X >\n{Error.formatD errorTraced}"
+    //    at ...
+    printf $"X >\n{Error.formatX error}"

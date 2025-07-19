@@ -11,20 +11,37 @@ public class DiagnosticErrorFormatter : IErrorFormatter
     public string Format(IError error)
     {
         var sb = new StringBuilder();
-        Fmt.FoldChain(
-            (s, err) =>
-                s.AppendLiteralError()
-                    .AppendErrorMessage(err)
-                    .AppendLine()
-                    .AppendErrorTrace(err),
-            (s, err) =>
-                s.AppendLiteralCause()
-                    .AppendErrorMessage(err)
-                    .AppendLine()
-                    .AppendErrorTrace(err),
-            error,
-            sb
-        );
+
+        IError? current = error;
+        int index = 0;
+        while (current is not null)
+        {
+            if (index == 0)
+            {
+                sb.Append('[').Append(index).Append("] Error: ").AppendErrorMessage(current).AppendLine();
+            }
+            else
+            {
+                sb.Append('[').Append(index).Append("] Cause: ").AppendErrorMessage(current).AppendLine();
+            }
+
+            index++;
+            current = current.InnerError;
+        }
+
+        current = error;
+        index = 0;
+        while (current is not null)
+        {
+            if (current is ITracedError { HasStackTrace: true } tracedCurrent)
+            {
+                sb.Append("Trace [").Append(index).Append("]:").AppendLine().AppendErrorTrace(tracedCurrent.StackTrace);
+            }
+
+            index++;
+            current = current.InnerError;
+        }
+
         return sb.ToString();
     }
 }

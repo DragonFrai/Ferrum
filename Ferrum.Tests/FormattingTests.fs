@@ -24,20 +24,27 @@ let tracedChainError: IError =
         ),
         "   at final\n"
     )
+let tracedChainErrorMiddleTraceOnly: IError =
+    DynamicError(
+        "Final",
+        DynamicError(
+            "Middle",
+            DynamicError(
+                "Root"
+            ),
+            "   at middle\n"
+        )
+    )
+
 
 let stringOfLines (lines: string seq) : string =
     String.Join("\n", lines)
 
+let stringOfLinesTrailing (lines: string seq) : string =
+    String.Join("\n", lines) + "\n"
+
 let assertFormat (formatter: IErrorFormatter) (error: IError) (expected: string) : unit =
     Assert.Equal(expected, formatter.Format(error))
-
-let assertFormatByLines (formatter: IErrorFormatter) (error: IError) (testers: (string -> unit) list) : unit =
-    let str = formatter.Format(error)
-    let lines = str.Split('\n')
-    Assert.Equal(testers.Length, lines.Length)
-    for line, tester in Seq.zip lines testers do
-        do tester line
-
 
 [<Fact>]
 let ``MessageErrorFormatter works`` () =
@@ -58,15 +65,76 @@ let ``SummaryErrorFormatter works`` () =
 [<Fact>]
 let ``DetailedErrorFormatter works`` () =
     let fmt = DetailedErrorFormatter.Instance
-    do assertFormat fmt singleError "Error: Final\n"
-    do assertFormat fmt chainError "Error: Final\nCause: Middle\nCause: Root\n"
-    do assertFormat fmt tracedSingleError "Error: Final\n   at final\n"
-    do assertFormat fmt tracedChainError "Error: Final\nCause: Middle\nCause: Root\n   at root\n"
+
+    do assertFormat fmt singleError (stringOfLinesTrailing [
+        "[0] Error: Final"
+    ])
+
+    do assertFormat fmt chainError (stringOfLinesTrailing [
+        "[0] Error: Final"
+        "[1] Cause: Middle"
+        "[2] Cause: Root"
+    ])
+
+    do assertFormat fmt tracedSingleError (stringOfLinesTrailing [
+        "[0] Error: Final"
+        "Trace [0]:"
+        "   at final"
+    ])
+
+    do assertFormat fmt tracedChainError (stringOfLinesTrailing [
+        "[0] Error: Final"
+        "[1] Cause: Middle"
+        "[2] Cause: Root"
+        "Trace [2]:"
+        "   at root"
+    ])
+
+    do assertFormat fmt tracedChainErrorMiddleTraceOnly (stringOfLinesTrailing [
+        "[0] Error: Final"
+        "[1] Cause: Middle"
+        "[2] Cause: Root"
+        "Trace [1]:"
+        "   at middle"
+    ])
+
 
 [<Fact>]
 let ``DiagnosticErrorFormatter works`` () =
     let fmt = DiagnosticErrorFormatter.Instance
-    do assertFormat fmt singleError "Error: Final\n"
-    do assertFormat fmt chainError "Error: Final\nCause: Middle\nCause: Root\n"
-    do assertFormat fmt tracedSingleError "Error: Final\n   at final\n"
-    do assertFormat fmt tracedChainError "Error: Final\n   at final\nCause: Middle\n   at middle\nCause: Root\n   at root\n"
+
+    do assertFormat fmt singleError (stringOfLinesTrailing [
+        "[0] Error: Final"
+    ])
+
+    do assertFormat fmt chainError (stringOfLinesTrailing [
+        "[0] Error: Final"
+        "[1] Cause: Middle"
+        "[2] Cause: Root"
+    ])
+
+    do assertFormat fmt tracedSingleError (stringOfLinesTrailing [
+        "[0] Error: Final"
+        "Trace [0]:"
+        "   at final"
+    ])
+
+    do assertFormat fmt tracedChainError (stringOfLinesTrailing [
+        "[0] Error: Final"
+        "[1] Cause: Middle"
+        "[2] Cause: Root"
+        "Trace [0]:"
+        "   at final"
+        "Trace [1]:"
+        "   at middle"
+        "Trace [2]:"
+        "   at root"
+    ])
+
+    do assertFormat fmt tracedChainErrorMiddleTraceOnly (stringOfLinesTrailing [
+        "[0] Error: Final"
+        "[1] Cause: Middle"
+        "[2] Cause: Root"
+        "Trace [1]:"
+        "   at middle"
+    ])
