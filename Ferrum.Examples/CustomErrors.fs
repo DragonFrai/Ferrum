@@ -1,6 +1,7 @@
 [<RequireQualifiedAccess>]
 module Ferrum.Examples.CustomErrors
 
+open Ferrum
 open Ferrum.FSharp
 
 

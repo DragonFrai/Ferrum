@@ -81,6 +81,32 @@ module Error =
     let toException (err: IError) : Exception =
         err.ToException()
 
+    // TODO?: Add ValueError creating
+    //
+    // NOTE:
+    //   The ValueError type looks pretty "technically".
+    //   Actually ValueError used for call ToString method or user function X -> String.
+    //   Instantiating this error type looks delicate and should be used is specific scenarios.
+    //   It does not mean that this types must not be created by Error and Result modules functions,
+    //   but "delicate" makes adding a bit careless.
+    //
+    // let inline ofValue (error: 'e) : IError =
+    //     ValueError(error)
+    //
+    // let inline ofValueWith (toString: 'e -> string) (error: 'e) : IError =
+    //     ValueError(error, toString)
+    //
+    // [<StackTraceHidden>]
+    // let inline ofValueTraced (error: 'e) : IError =
+    //     TracedValueError(error)
+    //
+    // [<StackTraceHidden>]
+    // let inline ofValueWithTraced (toString: 'e -> string) (error: 'e) : IError =
+    //     TracedValueError(error, toString)
+
+    let inline box (any: 'e) : IError =
+        AnyError.Create(any)
+
     let raise<'a> (err: IError) : 'a =
         do err.Throw()
         Unchecked.defaultof<'a>
@@ -109,62 +135,22 @@ module Error =
     let inline formatL (level: int) (error: IError) : string =
         error.Format(level)
 
-    /// <summary>
-    /// Format using <see cref="MessageErrorFormatter"/>. <br/>
-    /// Example: <c> Final error </c>
-    /// </summary>
-    /// <param name="error"></param>
+    /// <summary> Format the error using <see cref="T:Ferrum.Formatting.Formatters.MessageErrorFormatter"/> </summary>
+    /// <param name="error"> Error for formatting </param>
     let inline formatM (error: IError) : string =
         error.FormatM()
 
-    /// <summary>
-    /// Format using <see cref="SummaryErrorFormatter"/>. <br/>
-    /// Example: <c> Final error: Middle error: Root error </c>
-    /// </summary>
-    /// <param name="error"></param>
+    /// <summary> Format the error using <see cref="T:Ferrum.Formatting.Formatters.SummaryErrorFormatter"/> </summary>
+    /// <param name="error"> Error for formatting </param>
     let inline formatS (error: IError) : string =
         error.FormatS()
 
-    /// <summary>
-    /// Format using <see cref="DetailedErrorFormatter"/>. <br/>
-    /// Example:
-    /// <code>
-    /// Error: Final error
-    /// Cause: Middle error
-    /// Cause: Root error
-    ///    at ... (stack trace)
-    /// </code>
-    /// </summary>
-    /// <param name="error"></param>
+    /// <summary> Format the error using <see cref="T:Ferrum.Formatting.Formatters.DetailedErrorFormatter"/> </summary>
+    /// <param name="error"> Error for formatting </param>
     let inline formatD (error: IError) : string =
         error.FormatD()
 
-    /// <summary>
-    /// Format using <see cref="DiagnosticErrorFormatter"/>. <br/>
-    /// Example:
-    /// <code>
-    /// Error: Final error
-    ///    at ... (stack trace)
-    /// Cause: Middle error
-    ///    at ... (stack trace)
-    /// Cause: Root error
-    ///    at ... (stack trace)
-    /// </code>
-    /// </summary>
-    /// <param name="error"></param>
+    /// <summary> Format the error using <see cref="T:Ferrum.Formatting.Formatters.DiagnosticErrorFormatter"/> </summary>
+    /// <param name="error"> Error for formatting </param>
     let inline formatX (error: IError) : string =
         error.FormatX()
-
-    let inline box (error: 'e) : IError =
-        ValueError(error)
-
-    let inline boxWith (toString: 'e -> string) (error: 'e) : IError =
-        ValueError(error, toString)
-
-    [<StackTraceHidden>]
-    let inline boxTraced (error: 'e) : IError =
-        TracedValueError(error)
-
-    [<StackTraceHidden>]
-    let inline boxWithTraced (toString: 'e -> string) (error: 'e) : IError =
-        TracedValueError(error, toString)

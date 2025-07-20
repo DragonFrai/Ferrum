@@ -2,6 +2,8 @@ namespace Ferrum.FSharp
 
 open System.Diagnostics
 open FSharp.Core
+open Ferrum
+
 
 [<RequireQualifiedAccess>]
 module Result =
@@ -35,23 +37,6 @@ module Result =
         | Ok x -> Ok x
         | Error err -> Error (Error.contextTraced (context ()) err)
 
-    let ofExnResult (result: Result<'a, exn>) : Result<'a, IError> =
-        Result.mapError Error.ofException result
-
-    let toExnResult (result: Result<'a, IError>) : Result<'a, exn> =
-        Result.mapError (fun err -> Error.toException err) result
-
-    let boxError (result: Result<'a, 'e>) : Result<'a, IError> =
-        match result with
-        | Ok x -> Ok x
-        | Error err -> Error (Error.box err)
-
-    [<StackTraceHidden>]
-    let boxErrorTraced (result: Result<'a, 'e>) : Result<'a, IError> =
-        match result with
-        | Ok x -> Ok x
-        | Error err -> Error (Error.boxTraced err)
-
     let aggregate (message: string) (result: Result<'a, IError seq>) : Result<'a, IError> =
         match result with
         | Ok x -> Ok x
@@ -62,6 +47,17 @@ module Result =
         match result with
         | Ok x -> Ok x
         | Error err -> Error (Error.aggregateTraced message err)
+
+    let ofExnResult (result: Result<'a, exn>) : Result<'a, IError> =
+        Result.mapError Error.ofException result
+
+    let toExnResult (result: Result<'a, IError>) : Result<'a, exn> =
+        Result.mapError Error.toException result
+
+    let boxError (result: Result<'a, 'e>) : Result<'a, IError> =
+        match result with
+        | Ok x -> Ok x
+        | Error err -> Error (Error.box err)
 
     let catchToError (f: unit -> 'a) : Result<'a, IError> =
         try Ok (f ())

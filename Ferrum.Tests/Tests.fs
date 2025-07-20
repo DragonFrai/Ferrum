@@ -20,7 +20,7 @@ let ``MessageError works`` () =
 type ErrorToWrap = ErrorToWrap
 
 [<Fact>]
-let ``ObjectError works`` () =
+let ``ValueError works`` () =
     let test (f: ErrorToWrap -> IError) : unit =
         let errorToWrap = ErrorToWrap
         let err = f errorToWrap

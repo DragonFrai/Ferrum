@@ -3,6 +3,7 @@ module Ferrum.Tests.GraphvizFormattingTests
 open System
 open Xunit
 open Ferrum
+open Ferrum.Formatting
 open Ferrum.FSharp
 open Ferrum.Graphviz
 

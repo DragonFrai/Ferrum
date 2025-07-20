@@ -9,10 +9,10 @@ type MyError = | MyError
 
 let run () =
 
-    let wrappedError = Error.box MyError
-    printfn $"{Error.formatS wrappedError}"
+    let boxedError = Error.box MyError
+    printfn $"{Error.formatS boxedError}"
     // MyError
 
-    let contextError = Error.context "Some context" wrappedError
+    let contextError = Error.context "Some context" boxedError
     printfn $"{Error.formatS contextError}"
     // Some context: MyError
