@@ -76,10 +76,10 @@ module Error =
         error.GetStackTrace() |> Option.ofObj
 
     let ofException (ex: exn) : IError =
-        ExceptionError(ex)
+        ex.ToError()
 
-    let toException (err: IError) : ErrorException =
-        ErrorException(err)
+    let toException (err: IError) : Exception =
+        err.ToException()
 
     let raise<'a> (err: IError) : 'a =
         do err.Throw()

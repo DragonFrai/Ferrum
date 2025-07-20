@@ -3,27 +3,16 @@ using System.Text;
 namespace Ferrum.Formatting;
 
 
-/// <summary>
-/// Internal class for error formatting literals and utils.
-/// </summary>
-internal static class Fmt
-{
-    public const string NoMessage = "<NoMessage>";
-
-    public static string MessageOrDefault(IError error)
-    {
-        var msg = error.Message;
-        return string.IsNullOrEmpty(msg) ? NoMessage : msg;
-    }
-}
 
 internal static class StringBuilderExtensions
 {
-
+    private const string NoMessage = "<NoMessage>";
 
     public static StringBuilder AppendErrorMessage(this StringBuilder sb, IError error)
     {
-        return sb.Append(Fmt.MessageOrDefault(error));
+        var msg = error.Message;
+        var s = string.IsNullOrEmpty(msg) ? NoMessage : msg;
+        return sb.Append(s);
     }
 
     public static StringBuilder AppendErrorTrace(this StringBuilder sb, string? stackTraceStr)
