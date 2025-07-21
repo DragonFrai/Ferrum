@@ -30,8 +30,8 @@ public static class ExceptionInteropExtensions
     //     return null;
     // }
 
-    public static void Throw(this IError error)
-    {
-        throw error.ToException();
-    }
+    // public static void Throw(this IError error)
+    // {
+    //     throw error.ToException();
+    // }
 }

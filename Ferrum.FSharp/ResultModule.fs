@@ -66,4 +66,4 @@ module Result =
     let getOrRaiseError (result: Result<'a, IError>) : 'a =
         match result with
         | Ok x -> x
-        | Error err -> Error.raise err
+        | Error err -> raise (Error.toException err)

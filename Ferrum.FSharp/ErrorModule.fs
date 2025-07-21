@@ -107,9 +107,9 @@ module Error =
     let inline box (any: 'e) : IError =
         AnyError.Create(any)
 
-    let raise<'a> (err: IError) : 'a =
-        do err.Throw()
-        Unchecked.defaultof<'a>
+    // let raise<'a> (err: IError) : 'a =
+    //     do err.Throw()
+    //     Unchecked.defaultof<'a>
 
     /// <summary>
     /// Format error using formatter
