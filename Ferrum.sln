@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.FSharp", "Ferrum.FSharp\Ferrum.FSharp.fsproj", "{E8750601-2231-4BFE-B7DF-BE365755A174}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.Examples", "Ferrum.Examples\Ferrum.Examples.fsproj", "{2B70DC73-6B84-407A-85F7-6DD416D7CAB1}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.FSharp.Examples", "Ferrum.FSharp.Examples\Ferrum.FSharp.Examples.fsproj", "{2B70DC73-6B84-407A-85F7-6DD416D7CAB1}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Ferrum.Tests", "Ferrum.Tests\Ferrum.Tests.fsproj", "{45F5EA37-2AA9-474D-A0F3-FA4D392DE759}"
 EndProject
