@@ -1,0 +1,6 @@
+[book]
+title = "Ferrum book"
+authors = ["Vladislav Podporkin (DragonFrai)"]
+description = "Ferrum .NET library book"
+src = "book"
+language = "en"
