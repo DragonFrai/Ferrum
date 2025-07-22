@@ -2,3 +2,5 @@ artifacts
 
 .idea
 .vscode
+
+*.DotSettings.user
