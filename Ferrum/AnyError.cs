@@ -11,7 +11,7 @@ public static class AnyError
     /// <param name="any"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static IError Create<T>(T any)
+    public static IError OfValue<T>(T any)
     {
         return any switch
         {
@@ -22,9 +22,4 @@ public static class AnyError
             _ => new ValueError<T>(any)
         };
     }
-
-    // public static IError Create(object any)
-    // {
-    //     return Create<object>(any);
-    // }
 }

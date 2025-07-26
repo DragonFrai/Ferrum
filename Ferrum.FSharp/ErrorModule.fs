@@ -105,7 +105,7 @@ module Error =
     //     TracedValueError(error, toString)
 
     let inline box (any: 'e) : IError =
-        AnyError.Create(any)
+        AnyError.OfValue<'e>(any)
 
     // let raise<'a> (err: IError) : 'a =
     //     do err.Throw()
