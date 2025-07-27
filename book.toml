@@ -4,3 +4,10 @@ authors = ["Vladislav Podporkin (DragonFrai)"]
 description = "Ferrum .NET library book"
 src = "book"
 language = "en"
+
+[build]
+build-dir = "artifacts/book"
+
+#[output.html]
+#additional-css = [ "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" ]
+#

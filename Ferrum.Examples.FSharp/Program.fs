@@ -5,9 +5,6 @@ module Playground =
 
     [<EntryPoint>]
     let main argv =
-        printfn "===== Custom errors example    ====="
-        do CustomErrors.run ()
-        printfn "\n"
 
         printfn "===== Dynamic errors example   ====="
         do DynamicErrors.run ()

@@ -9,4 +9,9 @@ public static class ErrorsErrorExtensions
     {
         return new ContextError(message, error);
     }
+
+    public static TracedContextError ContextTraced(this IError error, string message)
+    {
+        return new TracedContextError(message, error);
+    }
 }
