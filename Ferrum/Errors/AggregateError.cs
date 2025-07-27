@@ -22,7 +22,7 @@ public class AggregateError : BaseError, IAggregateError
         _rocView = rocView;
     }
 
-    public AggregateError(string? message, IError[] innerErrors)
+    public AggregateError(string? message, params IError[] innerErrors)
         : this(message, Helpers.ArrayCopy(innerErrors), null) { }
 
     public AggregateError(string? message, IEnumerable<IError> innerErrors)
