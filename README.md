@@ -12,7 +12,7 @@ The F# + C# library for working with dynamic Error types.
 In many scenarios, using error-values can be more practical than using exceptions or errors as a simple string, 
 which have awkward composition methods.
 
-Open the (**Ferrum book** (TODO)) to learn how to use **Ferrum**.
+Open the [**Ferrum book**](https://dragonfrai.github.io/Ferrum/) to learn how to use **Ferrum**.
 
 
 ## Quick start C# and F# examples
