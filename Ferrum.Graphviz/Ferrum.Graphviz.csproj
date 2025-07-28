@@ -2,20 +2,17 @@
 
     <PropertyGroup>
         <PackageId>Ferrum.Graphviz</PackageId>
-        <Version>0.3.0</Version>
-        <Description>Ferrum graphviz exporter</Description>
-        <PackageTags>F# fsharp result error</PackageTags>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Description>Ferrum graphviz error formatter</Description>
+        <PackageTags>error errors result graphviz dot</PackageTags>
         <RepositoryUrl>https://github.com/DragonFrai/Ferrum</RepositoryUrl>
         <PackageProjectUrl>https://github.com/DragonFrai/Ferrum</PackageProjectUrl>
-        <Authors>DragonFrai</Authors>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>project-logo.png</PackageIcon>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <RootNamespace>Ferrum.Graphviz</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
