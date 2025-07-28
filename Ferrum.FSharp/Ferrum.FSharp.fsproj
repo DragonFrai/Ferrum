@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <PackageId>Ferrum.FSharp</PackageId>
+        <Description>Ferrum F# bindings</Description>
+        <PackageTags>F# fsharp error errors result</PackageTags>
+        <RepositoryUrl>https://github.com/DragonFrai/Ferrum</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/DragonFrai/Ferrum</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>project-logo-fsharp.png</PackageIcon>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <RootNamespace>Ferrum.FSharp</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="/" Visible="false"/>
+        <None Include="..\logo\project-logo-fsharp.png" Pack="true" PackagePath="/" Visible="false"/>
+    </ItemGroup>
+
+    <!--    -->
+
+    <ItemGroup>
+        <Compile Include="Types.fs" />
+        <Compile Include="ErrorModule.fs" />
+        <Compile Include="ResultModule.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Ferrum.Abstractions\Ferrum.Abstractions.csproj" />
+      <ProjectReference Include="..\Ferrum\Ferrum.csproj" />
+    </ItemGroup>
+
+
+</Project>

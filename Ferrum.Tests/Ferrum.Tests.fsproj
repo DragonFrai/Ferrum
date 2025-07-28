@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-
         <IsPackable>false</IsPackable>
         <GenerateProgramFile>false</GenerateProgramFile>
         <IsTestProject>true</IsTestProject>
@@ -31,8 +29,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Ferrum.Graphviz\Ferrum.Graphviz.fsproj" />
-      <ProjectReference Include="..\Ferrum\Ferrum.fsproj" />
+      <ProjectReference Include="..\Ferrum.FSharp\Ferrum.FSharp.fsproj" />
+      <ProjectReference Include="..\Ferrum.Graphviz\Ferrum.Graphviz.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <PackageId>Ferrum.Abstractions</PackageId>
+        <Description>.NET dynamic error type library interfaces</Description>
+        <PackageTags>error errors result</PackageTags>
+        <RepositoryUrl>https://github.com/DragonFrai/Ferrum</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/DragonFrai/Ferrum</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>project-logo.png</PackageIcon>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <RootNamespace>Ferrum</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="/" Visible="false"/>
+        <None Include="..\logo\project-logo.png" Pack="true" PackagePath="/" Visible="false"/>
+    </ItemGroup>
+
+</Project>

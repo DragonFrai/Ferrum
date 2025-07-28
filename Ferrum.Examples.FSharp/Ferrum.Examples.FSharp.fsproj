@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <GenerateProgramFile>false</GenerateProgramFile>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <RootNamespace>Ferrum.Examples</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Utils.fs" />
+        <Compile Include="DynamicErrors.fs" />
+        <Compile Include="GreetingFromFile.fs" />
+        <Compile Include="ErrorFormatting.fs" />
+        <Compile Include="ExceptionConverting.fs" />
+        <Compile Include="GeneralWrapping.fs" />
+        <Compile Include="DomainErrors.fs" />
+        <Compile Include="Readme.fs" />
+        <Compile Include="Program.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Ferrum.FSharp\Ferrum.FSharp.fsproj" />
+    </ItemGroup>
+
+</Project>

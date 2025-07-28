@@ -1,6 +1,17 @@
 <Project>
 
     <PropertyGroup>
+        <!-- <LangVersion>9.0</LangVersion> -->
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Version>0.4.0</Version>
+        <Authors>DragonFrai</Authors>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <UseArtifactsOutput>true</UseArtifactsOutput>
         <!-- Actually the default, but forces to use exatly this Directory.Build.props file, instead of any nested one -->
         <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
