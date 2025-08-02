@@ -29,6 +29,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="FSharp.Core"/>
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\Ferrum.Abstractions\Ferrum.Abstractions.csproj" />
       <ProjectReference Include="..\Ferrum\Ferrum.csproj" />
     </ItemGroup>
