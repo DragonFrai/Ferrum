@@ -1,14 +1,38 @@
 <Project>
 
     <PropertyGroup>
-        <!-- <LangVersion>9.0</LangVersion> -->
         <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup>
-        <Version>0.4.0</Version>
+        <Version>0.4.1</Version>
         <Authors>DragonFrai</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- Enable central package management -->
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+
+    <!-- Make FSharp.Core dependency explicit -->
+    <!-- See https://github.com/NuGet/Home/issues/11949 -->
+    <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.fsproj'">
+        <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.fsproj'">
+        <PackageReference Include="FSharp.Core" />
+        <PackageReference Update="FSharp.Core">
+            <ExcludeAssets>contentFiles</ExcludeAssets> <!-- To remove FSharp.Core.xml from every project -->
+        </PackageReference>
+    </ItemGroup>
+
+    <!-- Lang versions -->
+    <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.fsproj'">
+        <LangVersion>8.0</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+        <LangVersion>12.0</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup>
