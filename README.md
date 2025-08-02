@@ -61,13 +61,13 @@ public static class ReadmeExample
         if (helloStringError is not null)
         {
             // Print:
-            // I can't say hello to you: Hello not created: Could not find file '.../name.txt'.
+            // I can't say hello: Hello not created: Could not find file '.../name.txt'.
             Console.WriteLine($"I can't say hello: {helloStringError.FormatS()}");
         }
         else
         {
             // Print:
-            // I say you: Hello, <name>!
+            // I say: Hello, <name>!
             Console.WriteLine($"I say: {helloString}");
         }
     }
@@ -105,11 +105,11 @@ module ReadmeExample =
         match createHello () with
         | Error error ->
             // Print:
-            // I can't say hello to you: Hello not created: Could not find file '.../name.txt'.
+            // I can't say hello: Hello not created: Could not find file '.../name.txt'.
             printfn $"I can't say hello: {Error.formatS error}"
         | Ok helloString ->
             // Print:
-            // I say you: Hello, <name>!
+            // I say: Hello, <name>!
             printfn $"I say: {helloString}"
         0
 ```
@@ -163,6 +163,7 @@ Fairly stable components are `IAggregateError`, `AggregateError`,
 
 The remaining components are the least stable.
 
+Open an issue to discuss design elements, implementations, or use cases.
 
 ## From v0.3 to v0.4 F# migration
 
