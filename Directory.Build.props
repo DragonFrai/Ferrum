@@ -27,6 +27,14 @@
         </PackageReference>
     </ItemGroup>
 
+    <!-- Lang versions -->
+    <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.fsproj'">
+        <LangVersion>8.0</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+        <LangVersion>12.0</LangVersion>
+    </PropertyGroup>
+
     <PropertyGroup>
         <UseArtifactsOutput>true</UseArtifactsOutput>
         <!-- Actually the default, but forces to use exatly this Directory.Build.props file, instead of any nested one -->
