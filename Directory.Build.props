@@ -12,6 +12,11 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <!-- Enable central package management -->
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <UseArtifactsOutput>true</UseArtifactsOutput>
         <!-- Actually the default, but forces to use exatly this Directory.Build.props file, instead of any nested one -->
         <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
