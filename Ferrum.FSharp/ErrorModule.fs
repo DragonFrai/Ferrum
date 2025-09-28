@@ -72,8 +72,14 @@ module Error =
     let inline getRoot (error: IError) : IError =
         error.GetRoot()
 
+    let inline getHasStackTrace (error: IError) : bool =
+        error.GetHasStackTrace()
+
     let getStackTrace (error: IError) : string option =
         error.GetStackTrace() |> Option.ofObj
+
+    let inline isChainHasStackTrace (error: IError) : bool =
+        error.IsChainHasStakTrace()
 
     let ofException (ex: exn) : IError =
         ex.ToError()

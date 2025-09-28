@@ -32,9 +32,32 @@ public static class ErrorExtensions
         return (error as ITracedError)?.StackTrace;
     }
 
+    public static bool GetHasStackTrace(this IError error)
+    {
+        if (error is ITracedError tracedError)
+        {
+            return tracedError.HasStackTrace;
+        }
+        return false;
+    }
+
     public static bool GetIsAggregate(this IError error)
     {
         return error is IAggregateError { InnerErrors: not null };
+    }
+
+    public static bool IsChainHasStakTrace(this IError error)
+    {
+        var current = error;
+        while (current is not null)
+        {
+            if (current.GetHasStackTrace())
+            {
+                return true;
+            }
+            current = current.InnerError;
+        }
+        return false;
     }
 
     public static IReadOnlyCollection<IError> GetInnerErrors(this IError error)
