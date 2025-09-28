@@ -20,6 +20,11 @@ module Result =
         | Ok x -> Ok x
         | Error err -> Error (Error.context context err)
 
+    let contextOnce (context: string) (result: Result<'a, IError>) : Result<'a, IError> =
+        match result with
+        | Ok x -> Ok x
+        | Error err -> Error (Error.contextOnce context err)
+
     [<StackTraceHidden>]
     let contextTraced (context: string) (result: Result<'a, IError>) : Result<'a, IError> =
         match result with

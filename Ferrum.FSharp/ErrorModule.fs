@@ -29,6 +29,9 @@ module Error =
     let inline context (message: string) (source: IError) : IError =
         ContextError(message, source)
 
+    let inline contextOnce (message: string) (source: IError) : IError =
+        source.ContextOnce(message)
+
     [<StackTraceHidden>]
     let inline contextTraced (message: string) (innerError: IError) : IError =
         TracedContextError(message, innerError)
